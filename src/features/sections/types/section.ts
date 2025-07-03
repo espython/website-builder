@@ -36,10 +36,11 @@ export type SectionContent =
 // Hero section
 export interface HeroContent {
   title: string;
-  subtitle?: string;
+  description?: string;
   backgroundImage?: string;
   buttonText?: string;
   buttonLink?: string;
+  alignment?: 'center' | 'left' | 'right';
 }
 
 // Features section
@@ -89,7 +90,7 @@ export interface Testimonial {
 
 export interface TestimonialsContent {
   title: string;
-  subtitle?: string;
+  description?: string;
   testimonials: Testimonial[];
 }
 
@@ -102,6 +103,7 @@ export interface ContactContent {
   address?: string;
   mapUrl?: string;
   showForm?: boolean;
+  socialLinks?: FooterLink[];
 }
 
 // Gallery section
@@ -163,7 +165,10 @@ export interface FooterLinkGroup {
 }
 
 export interface FooterContent {
-  logo?: string;
+  logo?: {
+    text: string;
+    image?: string;
+  };
   description?: string;
   linkGroups?: FooterLinkGroup[];
   socialLinks?: FooterLink[];

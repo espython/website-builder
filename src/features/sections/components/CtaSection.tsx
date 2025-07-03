@@ -14,45 +14,48 @@ const CtaSection = ({ content, isSelected, onClick }: CtaSectionProps) => {
     : {};
 
   return (
-    <div
-      className={`py-16 px-8 bg-blue-50 bg-cover bg-center relative cursor-pointer ${
+    <section
+      className={`py-16 px-8 bg-blue-600 relative overflow-hidden cursor-pointer ${
         isSelected ? 'outline outline-2 outline-blue-500' : ''
       }`}
-      style={bgStyle}
       onClick={onClick}
+      style={bgStyle}
     >
+      {/* Dark overlay for image backgrounds */}
       {content.backgroundImage && (
-        <div className="absolute inset-0 bg-blue-900 bg-opacity-70"></div>
+        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
       )}
 
-      <div className="max-w-4xl mx-auto text-center relative z-10">
-        <h2
-          className={`text-3xl font-bold mb-4 ${
-            content.backgroundImage ? 'text-white' : 'text-gray-800'
-          }`}
-        >
-          {content.title}
-        </h2>
-
-        {content.description && (
-          <p
-            className={`text-xl mb-8 ${
-              content.backgroundImage ? 'text-gray-200' : 'text-gray-600'
+      <div className="container mx-auto relative z-10">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2
+            className={`text-3xl md:text-4xl font-bold mb-6 ${
+              content.backgroundImage ? 'text-white' : 'text-white'
             }`}
           >
-            {content.description}
-          </p>
-        )}
-
-        <a
-          href={content.buttonLink || '#'}
-          className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-md text-lg transition-colors"
-          onClick={(e) => e.preventDefault()} // Prevent navigation in builder mode
-        >
-          {content.buttonText}
-        </a>
+            {content.title}
+          </h2>
+          {content.description && (
+            <p
+              className={`text-lg md:text-xl mb-8 ${
+                content.backgroundImage ? 'text-gray-200' : 'text-blue-100'
+              }`}
+            >
+              {content.description}
+            </p>
+          )}
+          {content.buttonText && (
+            <a
+              href={content.buttonLink || '#'}
+              className="inline-block bg-white hover:bg-gray-100 text-blue-600 font-medium px-8 py-3 rounded-md text-lg transition-colors shadow-md"
+              onClick={(e) => e.preventDefault()} // Prevent navigation in builder mode
+            >
+              {content.buttonText}
+            </a>
+          )}
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

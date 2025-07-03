@@ -14,63 +14,50 @@ const GallerySection = ({
   onClick,
 }: GallerySectionProps) => {
   return (
-    <div
+    <section
       className={`py-16 px-8 bg-white cursor-pointer ${
         isSelected ? 'outline outline-2 outline-blue-500' : ''
       }`}
       onClick={onClick}
     >
-      <div className="max-w-6xl mx-auto">
-        {(content.title || content.description) && (
-          <div className="text-center mb-12">
-            {content.title && (
-              <h2 className="text-3xl font-bold text-gray-800 mb-4">
-                {content.title}
-              </h2>
-            )}
-            {content.description && (
-              <p className="text-lg text-gray-600">{content.description}</p>
-            )}
-          </div>
-        )}
+      <div className="container mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">{content.title}</h2>
+          {content.description && (
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              {content.description}
+            </p>
+          )}
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {content.items?.map((item) => (
-            <div key={item.id} className="overflow-hidden rounded-lg">
-              {item.link ? (
-                <a href={item.link} onClick={(e) => e.preventDefault()}>
-                  <div className="relative group">
-                    <img
-                      src={item.image}
-                      alt={item.caption || ''}
-                      className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
-                    {item.caption && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-3">
-                        <p>{item.caption}</p>
-                      </div>
-                    )}
-                  </div>
-                </a>
-              ) : (
-                <div className="relative group">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {content.items.map((item) => (
+            <div key={item.id} className="group">
+              <a
+                href={item.link || '#'}
+                className="block overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow"
+                onClick={(e) => e.preventDefault()}
+              >
+                <div className="relative aspect-square">
                   <img
                     src={item.image}
-                    alt={item.caption || ''}
-                    className="w-full h-64 object-cover"
+                    alt={item.caption || 'Gallery image'}
+                    className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                   />
                   {item.caption && (
-                    <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-3">
-                      <p>{item.caption}</p>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                      <p className="text-white text-sm font-medium">
+                        {item.caption}
+                      </p>
                     </div>
                   )}
                 </div>
-              )}
+              </a>
             </div>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
