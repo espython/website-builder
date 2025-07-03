@@ -1,14 +1,14 @@
 'use client';
 
 import { Download, Upload, Save, Undo, Redo, Settings } from 'lucide-react';
-import { useSectionsStore } from '@/features/sections/store/sectionsStore';
+import {
+  useSectionActions,
+  useSections,
+} from '@/features/sections/hooks/sections-hook';
 
 const Toolbar = () => {
-  const { exportSite, importSite, sections } = useSectionsStore((state) => ({
-    exportSite: state.exportSite,
-    importSite: state.importSite,
-    sections: state.sections,
-  }));
+  const { exportSite, importSite } = useSectionActions();
+  const sections = useSections();
 
   const handleImport = () => {
     const input = document.createElement('input');

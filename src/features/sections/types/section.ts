@@ -66,6 +66,8 @@ export interface PricingPlan {
   buttonText: string;
   buttonLink?: string;
   isHighlighted?: boolean;
+  featured?: boolean;
+  description?: string;
 }
 
 export interface PricingContent {
@@ -81,10 +83,13 @@ export interface Testimonial {
   author: string;
   role?: string;
   avatar?: string;
+  rating: number;
+  company?: string;
 }
 
 export interface TestimonialsContent {
   title: string;
+  subtitle?: string;
   testimonials: Testimonial[];
 }
 
@@ -108,14 +113,14 @@ export interface GalleryItem {
 }
 
 export interface GalleryContent {
-  title?: string;
+  title: string;
   description?: string;
   items: GalleryItem[];
 }
 
 // Text section
 export interface TextContent {
-  title?: string;
+  title: string;
   content: string;
 }
 
