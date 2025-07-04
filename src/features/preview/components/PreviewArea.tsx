@@ -166,6 +166,7 @@ const PreviewArea = () => {
         return (
           <HeroSection
             key={section.id}
+            id={section.id}
             content={section?.content as HeroContent}
             isSelected={isSelected}
             onClick={onClick}
@@ -175,6 +176,7 @@ const PreviewArea = () => {
         return (
           <FeaturesSection
             key={section.id}
+            id={section.id}
             content={section.content as FeaturesContent}
             isSelected={isSelected}
             onClick={onClick}
@@ -184,6 +186,7 @@ const PreviewArea = () => {
         return (
           <TextSection
             key={section.id}
+            id={section.id}
             content={section.content as TextContent}
             isSelected={isSelected}
             onClick={onClick}
@@ -202,6 +205,7 @@ const PreviewArea = () => {
         return (
           <TestimonialsSection
             key={section.id}
+            id={section.id}
             content={section.content as TestimonialsContent}
             isSelected={isSelected}
             onClick={onClick}
@@ -211,6 +215,7 @@ const PreviewArea = () => {
         return (
           <ContactSection
             key={section.id}
+            id={section.id}
             content={section.content as ContactContent}
             isSelected={isSelected}
             onClick={onClick}
@@ -220,6 +225,7 @@ const PreviewArea = () => {
         return (
           <GallerySection
             key={section.id}
+            id={section.id}
             content={section.content as GalleryContent}
             isSelected={isSelected}
             onClick={onClick}
@@ -229,6 +235,7 @@ const PreviewArea = () => {
         return (
           <CtaSection
             key={section.id}
+            id={section.id}
             content={section.content as CTAContent}
             isSelected={isSelected}
             onClick={onClick}
@@ -238,6 +245,7 @@ const PreviewArea = () => {
         return (
           <HeaderSection
             key={section.id}
+            id={section.id}
             content={section.content as HeaderContent}
             isSelected={isSelected}
             onClick={onClick}
@@ -247,6 +255,7 @@ const PreviewArea = () => {
         return (
           <FooterSection
             key={section.id}
+            id={section.id}
             content={section.content as FooterContent}
             isSelected={isSelected}
             onClick={onClick}

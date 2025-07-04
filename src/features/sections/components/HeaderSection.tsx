@@ -29,28 +29,75 @@ const HeaderSection = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const updateSection = useUpdateSection();
 
+  console.log(content);
+
   // Handler for updating different fields
   const handleFieldUpdate = (field: string, value: string) => {
-    const updatedContent = { ...content };
+    console.log('Updating header field:', field, value); // Debug log
+    console.log('Field type:', typeof field); // Check type of field parameter
+
+    // Create a proper deep copy of the content object
+    const updatedContent = {
+      ...content,
+      menuItems: content.menuItems ? [...content.menuItems] : [],
+    };
 
     if (field === 'logo') {
       updatedContent.logo = value;
-    } else if (field.startsWith('menuItem-')) {
-      const itemId = field.split('-')[1];
+    } else if (typeof field === 'string' && field.startsWith('menu-')) {
+      // Handle menu items with menu- prefix
+      const itemId = field;
+      console.log('Split itemId:', itemId);
+
       const itemIndex = updatedContent.menuItems.findIndex(
         (item) => item.id === itemId
       );
+      console.log('itemIndex for menu-prefix:', itemIndex);
 
       if (itemIndex !== -1) {
-        updatedContent.menuItems[itemIndex] = {
-          ...updatedContent.menuItems[itemIndex],
-          label: value,
-        };
+        updatedContent.menuItems = updatedContent.menuItems.map((item) =>
+          item.id === itemId ? { ...item, label: value } : item
+        );
       }
-    } else if (field === 'contactButtonText') {
-      updatedContent.contactButtonText = value;
+    } else {
+      // Handle direct item.id passed as field
+      console.log('Direct item.id passed:', field);
+      console.log(
+        'Available menuItems:',
+        updatedContent.menuItems.map((item) => ({
+          id: item.id,
+          label: item.label,
+        }))
+      );
+
+      // Convert field to string for safer comparison if it's not already
+      const fieldStr = String(field);
+
+      // Try to find the item both with direct comparison and string comparison
+      const itemIndex = updatedContent.menuItems.findIndex(
+        (item) => item.id === field || item.id === fieldStr
+      );
+      console.log('itemIndex for direct id:', itemIndex);
+
+      if (itemIndex !== -1) {
+        updatedContent.menuItems = updatedContent.menuItems.map((item) => {
+          const matches = item.id === field || item.id === fieldStr;
+          console.log(`Comparing ${item.id} with ${field}: ${matches}`);
+          return matches ? { ...item, label: value } : item;
+        });
+      } else if (field === 'contactButtonText') {
+        updatedContent.contactButtonText = value;
+      }
     }
 
+    console.log('Final updatedContent:', updatedContent);
+
+    // For debugging - check what we're actually passing to the store
+    console.log('Sending to store - id:', id);
+    console.log('Sending to store - content:', updatedContent);
+
+    // Make sure we're passing the content in the format expected by the store
+    // The store expects to receive just the content portion, not the entire section
     updateSection(id, updatedContent);
   };
 
@@ -76,9 +123,7 @@ const HeaderSection = ({
               <InlineEditableField
                 key={item.id}
                 value={item.label}
-                onChange={(newValue) =>
-                  handleFieldUpdate(`menuItem-${item.id}`, newValue)
-                }
+                onChange={(newValue) => handleFieldUpdate(item.id, newValue)}
                 isEditable={isSelected}
                 className="text-gray-600 hover:text-blue-600 transition-colors"
               />

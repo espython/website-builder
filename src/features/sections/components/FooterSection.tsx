@@ -59,7 +59,7 @@ const FooterSection = ({
 
   return (
     <Card
-      className={`bg-gray-900 text-white py-12 px-6 cursor-pointer ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
+      className={`bg-gray-900 text-white py-12 px-6 cursor-pointer rounded-none ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
       onClick={onClick}
     >
       <div className="container mx-auto">

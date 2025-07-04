@@ -43,7 +43,7 @@ const GallerySection = ({
 
   return (
     <Card
-      className={`py-12 px-6 bg-white cursor-pointer ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
+      className={`py-12 px-6 bg-white cursor-pointer rounded-none ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
       onClick={onClick}
     >
       <div className="container mx-auto">

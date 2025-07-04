@@ -32,7 +32,7 @@ const CtaSection = ({ content, isSelected, onClick, id }: CtaSectionProps) => {
 
   return (
     <Card
-      className={`py-16 px-8 bg-blue-600 relative overflow-hidden cursor-pointer ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
+      className={`py-16 px-8 bg-blue-600 relative overflow-hidden cursor-pointer rounded-none ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
       onClick={onClick}
       style={
         content.backgroundImage

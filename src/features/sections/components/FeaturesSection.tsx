@@ -47,7 +47,7 @@ const FeaturesSection = ({
 
   return (
     <Card
-      className={`py-16 px-8 bg-white cursor-pointer ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
+      className={`py-16 px-8 bg-white cursor-pointer rounded-none ${isSelected ? 'outline-2 outline-blue-500' : ''}`}
       onClick={onClick}
     >
       <div className="container mx-auto">
