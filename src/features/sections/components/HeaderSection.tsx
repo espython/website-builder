@@ -12,12 +12,14 @@ import { useUpdateSection } from '../hooks/sections-hook';
 import { Button } from '@/shared/components/ui/button';
 import { Card } from '@/shared/components/ui/card';
 import { InlineEditableField } from './common/InlineEditableField';
+import { PreviewMode } from '@/features/preview/store/uiStore';
 
 interface HeaderSectionProps {
   content: HeaderContent;
   isSelected: boolean;
   onClick: () => void;
   id: string;
+  previewMode: PreviewMode;
 }
 
 const HeaderSection = ({
@@ -25,6 +27,7 @@ const HeaderSection = ({
   isSelected,
   onClick,
   id,
+  previewMode,
 }: HeaderSectionProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const updateSection = useUpdateSection();
@@ -103,29 +106,35 @@ const HeaderSection = ({
 
   return (
     <Card
-      className={`py-3 md:py-4 px-4 md:px-6 bg-white border-b border-gray-200 sticky top-0 z-50 cursor-pointer rounded-none shadow-sm ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
+      className={`${previewMode === 'mobile' ? 'py-2 px-3' : previewMode === 'tablet' ? 'py-3 px-4' : 'py-4 px-6'} bg-white border-b border-gray-200 sticky top-0 z-50 cursor-pointer rounded-none shadow-sm ${isSelected ? 'outline-2 outline-blue-500' : ''}`}
       onClick={onClick}
     >
-      <div className="container mx-auto px-2 sm:px-4 lg:px-6">
+      <div
+        className={`container mx-auto ${previewMode === 'mobile' ? 'px-1' : 'px-2 sm:px-4 lg:px-6'}`}
+      >
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="text-xl font-bold text-gray-800">
             {/* We'll keep using Avatar for the logo instead of text editing */}
-            <Avatar className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-lg">
+            <Avatar
+              className={`${previewMode === 'mobile' ? 'w-8 h-8' : previewMode === 'tablet' ? 'w-10 h-10' : 'w-12 h-12 md:w-14 md:h-14'} rounded-lg`}
+            >
               <AvatarImage src={content?.logo || undefined} />
               <AvatarFallback>Logo</AvatarFallback>
             </Avatar>
           </div>
 
           {/* Desktop menu */}
-          <div className="hidden md:flex items-center space-x-3 lg:space-x-6">
+          <div
+            className={`${previewMode === 'mobile' ? 'hidden' : 'hidden md:flex'} items-center space-x-2 sm:space-x-3 lg:space-x-6`}
+          >
             {content.menuItems?.map((item) => (
               <InlineEditableField
                 key={item.id}
                 value={item.label}
                 onChange={(newValue) => handleFieldUpdate(item.id, newValue)}
-                isEditable={isSelected}
-                className="text-sm lg:text-base text-gray-600 hover:text-blue-600 transition-colors"
+                isEditable={isSelected && previewMode === 'desktop'}
+                className={`${previewMode === 'tablet' ? 'text-xs' : 'text-sm lg:text-base'} text-gray-600 hover:text-blue-600 transition-colors`}
               />
             ))}
 
@@ -134,7 +143,7 @@ const HeaderSection = ({
               content.contactButtonText && (
                 <Button
                   variant="default"
-                  className={`bg-blue-600 hover:bg-blue-700 ${isSelected ? 'hover:bg-blue-800' : ''}`}
+                  className={`${previewMode === 'tablet' ? 'text-xs px-2 py-1' : 'text-sm px-3 py-2'} bg-blue-600 hover:bg-blue-700 ${isSelected ? 'hover:bg-blue-800' : ''}`}
                   onClick={(e) => {
                     e.preventDefault();
                   }}
@@ -144,7 +153,7 @@ const HeaderSection = ({
                     onChange={(newValue) =>
                       handleFieldUpdate('contactButtonText', newValue)
                     }
-                    isEditable={isSelected}
+                    isEditable={isSelected && previewMode === 'desktop'}
                     className="text-white"
                     buttonClassName="bg-white"
                   />
@@ -153,24 +162,30 @@ const HeaderSection = ({
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div
+            className={`${previewMode === 'mobile' || previewMode === 'tablet' ? 'block' : 'hidden'}`}
+          >
             <Button
               variant="ghost"
-              size="icon"
+              size={previewMode === 'mobile' ? 'sm' : 'icon'}
               className="text-gray-600 hover:text-gray-900"
               onClick={(e) => {
                 e.stopPropagation();
                 setMobileMenuOpen(!mobileMenuOpen);
               }}
             >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {mobileMenuOpen ? (
+                <X size={previewMode === 'mobile' ? 20 : 24} />
+              ) : (
+                <Menu size={previewMode === 'mobile' ? 20 : 24} />
+              )}
             </Button>
           </div>
         </div>
 
         {/* Mobile menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden mt-4 py-4 border-t border-gray-200">
+        {mobileMenuOpen && previewMode === 'mobile' && (
+          <div className="mt-4 py-4 border-t border-gray-200">
             <div className="flex flex-col space-y-4">
               {content.menuItems?.map((item) => (
                 <InlineEditableField

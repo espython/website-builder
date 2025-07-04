@@ -1,12 +1,13 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import {
   useSections,
   useSelectedSectionId,
   useSelectSection,
   useReorderSections,
 } from '@/features/sections/hooks/sections-hook';
+import { usePreviewMode, useSetPreviewMode } from '../hooks/ui-hooks';
 import {
   ContactContent,
   CTAContent,
@@ -61,8 +62,6 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-
-type PreviewMode = 'mobile' | 'tablet' | 'desktop';
 
 // Sortable section wrapper component
 interface SortableSectionProps {
@@ -123,7 +122,8 @@ const PreviewArea = () => {
   const selectedSectionId = useSelectedSectionId();
   const selectSection = useSelectSection();
   const reorderSections = useReorderSections();
-  const [previewMode, setPreviewMode] = useState<PreviewMode>('desktop');
+  const previewMode = usePreviewMode();
+  const setPreviewMode = useSetPreviewMode();
 
   // Configure drag sensors with higher activation constraints for better user experience
   const mouseSensor = useSensor(MouseSensor, {
@@ -170,6 +170,7 @@ const PreviewArea = () => {
             content={section?.content as HeroContent}
             isSelected={isSelected}
             onClick={onClick}
+            previewMode={previewMode}
           />
         );
       case SectionType.FEATURES:
@@ -180,6 +181,7 @@ const PreviewArea = () => {
             content={section.content as FeaturesContent}
             isSelected={isSelected}
             onClick={onClick}
+            previewMode={previewMode}
           />
         );
       case SectionType.TEXT:
@@ -190,6 +192,7 @@ const PreviewArea = () => {
             content={section.content as TextContent}
             isSelected={isSelected}
             onClick={onClick}
+            previewMode={previewMode}
           />
         );
       case SectionType.PRICING:
@@ -199,6 +202,8 @@ const PreviewArea = () => {
             content={section.content as PricingContent}
             isSelected={isSelected}
             onClick={onClick}
+            id={section.id}
+            previewMode={previewMode}
           />
         );
       case SectionType.TESTIMONIALS:
@@ -209,6 +214,7 @@ const PreviewArea = () => {
             content={section.content as TestimonialsContent}
             isSelected={isSelected}
             onClick={onClick}
+            previewMode={previewMode}
           />
         );
       case SectionType.CONTACT:
@@ -219,6 +225,7 @@ const PreviewArea = () => {
             content={section.content as ContactContent}
             isSelected={isSelected}
             onClick={onClick}
+            previewMode={previewMode}
           />
         );
       case SectionType.GALLERY:
@@ -229,6 +236,7 @@ const PreviewArea = () => {
             content={section.content as GalleryContent}
             isSelected={isSelected}
             onClick={onClick}
+            previewMode={previewMode}
           />
         );
       case SectionType.CTA:
@@ -239,6 +247,7 @@ const PreviewArea = () => {
             content={section.content as CTAContent}
             isSelected={isSelected}
             onClick={onClick}
+            previewMode={previewMode}
           />
         );
       case SectionType.HEADER:
@@ -249,6 +258,7 @@ const PreviewArea = () => {
             content={section.content as HeaderContent}
             isSelected={isSelected}
             onClick={onClick}
+            previewMode={previewMode}
           />
         );
       case SectionType.FOOTER:
@@ -259,6 +269,7 @@ const PreviewArea = () => {
             content={section.content as FooterContent}
             isSelected={isSelected}
             onClick={onClick}
+            previewMode={previewMode}
           />
         );
       default:

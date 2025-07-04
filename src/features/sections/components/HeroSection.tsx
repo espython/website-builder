@@ -8,12 +8,14 @@ import { InlineEditableField } from './common/InlineEditableField';
 import { useState, useEffect, useRef } from 'react';
 import { Check } from 'lucide-react';
 import { Textarea } from '@/shared/components/ui/textarea';
+import { PreviewMode } from '@/features/preview/store/uiStore';
 
 interface HeroSectionProps {
   content: HeroContent;
   isSelected: boolean;
   onClick: () => void;
   id: string;
+  previewMode: PreviewMode;
 }
 
 // Custom component for multi-line text editing
@@ -119,6 +121,7 @@ const HeroSection = ({
   isSelected,
   onClick,
   id,
+  previewMode,
 }: HeroSectionProps) => {
   const updateSection = useUpdateSection();
 
@@ -158,28 +161,34 @@ const HeroSection = ({
 
   return (
     <Card
-      className={`relative overflow-hidden rounded-none py-10 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8 cursor-pointer ${isSelected ? ' outline-2 outline-blue-500' : ''}`}
+      className={`relative overflow-hidden rounded-none ${previewMode === 'mobile' ? 'py-6 px-2' : previewMode === 'tablet' ? 'py-8 px-4' : 'py-10 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8'} cursor-pointer ${isSelected ? ' outline-2 outline-blue-500' : ''}`}
       style={backgroundStyle}
       onClick={onClick}
     >
       {/* Use modern Tailwind syntax and ensure proper layering */}
       <div className="absolute inset-0 bg-black/30 z-[1]" />
 
-      <div className="container mx-auto text-center relative z-10">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6">
+      <div
+        className={`container mx-auto text-center relative z-10 ${previewMode === 'mobile' ? 'px-2' : 'px-4'}`}
+      >
+        <h1
+          className={`${previewMode === 'mobile' ? 'text-2xl' : previewMode === 'tablet' ? 'text-3xl' : 'text-3xl sm:text-4xl md:text-5xl'} font-bold text-white mb-4 sm:mb-6`}
+        >
           <InlineEditableField
             value={content.title || ''}
             onChange={(newValue) => handleFieldUpdate('title', newValue)}
-            isEditable={isSelected}
+            isEditable={isSelected && previewMode === 'desktop'}
             className="inline-block"
           />
         </h1>
 
-        <div className="text-lg sm:text-xl md:text-2xl text-white mb-6 sm:mb-8">
+        <div
+          className={`${previewMode === 'mobile' ? 'text-base' : previewMode === 'tablet' ? 'text-lg' : 'text-lg sm:text-xl md:text-2xl'} text-white mb-6 sm:mb-8`}
+        >
           <InlineEditableTextarea
             value={content.description || ''}
             onChange={(newValue) => handleFieldUpdate('description', newValue)}
-            isEditable={isSelected}
+            isEditable={isSelected && previewMode === 'desktop'}
             className="inline-block text-left"
             placeholder="Add a description..."
           />
@@ -188,8 +197,8 @@ const HeroSection = ({
         {content.buttonText && (
           <Button
             variant="default"
-            size="lg"
-            className="bg-white text-gray-900 hover:bg-gray-100 px-4 sm:px-6 py-2 text-sm sm:text-base md:text-lg"
+            size={previewMode === 'mobile' ? 'sm' : 'lg'}
+            className={`bg-white text-gray-900 hover:bg-gray-100 ${previewMode === 'mobile' ? 'px-3 py-1 text-xs' : previewMode === 'tablet' ? 'px-4 py-2 text-sm' : 'px-4 sm:px-6 py-2 text-sm sm:text-base md:text-lg'}`}
             onClick={(e) => {
               if (isSelected) {
                 e.stopPropagation();
@@ -199,7 +208,7 @@ const HeroSection = ({
             <InlineEditableField
               value={content.buttonText}
               onChange={(newValue) => handleFieldUpdate('buttonText', newValue)}
-              isEditable={isSelected}
+              isEditable={isSelected && previewMode === 'desktop'}
             />
           </Button>
         )}
