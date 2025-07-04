@@ -2,169 +2,219 @@
 
 import { ContactContent } from '@/features/sections/types/section';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import { useUpdateSection } from '../hooks/sections-hook';
+import { Card } from '@/shared/components/ui/card';
+import { Input } from '@/shared/components/ui/input';
+import { Textarea } from '@/shared/components/ui/textarea';
+import { Button } from '@/shared/components/ui/button';
+import { InlineEditableField } from './common/InlineEditableField';
 
 interface ContactSectionProps {
   content: ContactContent;
   isSelected: boolean;
   onClick: () => void;
+  id: string;
 }
 
 const ContactSection = ({
   content,
   isSelected,
   onClick,
+  id,
 }: ContactSectionProps) => {
+  const updateSection = useUpdateSection();
+
+  const handleFieldUpdate = (field: string, value: string) => {
+    const updatedContent = { ...content };
+
+    if (field === 'title') {
+      updatedContent.title = value;
+    } else if (field === 'description') {
+      updatedContent.description = value;
+    } else if (field === 'email') {
+      updatedContent.email = value;
+    } else if (field === 'phone') {
+      updatedContent.phone = value;
+    } else if (field === 'address') {
+      updatedContent.address = value;
+    } else if (field === 'formTitle') {
+      updatedContent.formTitle = value;
+    } else if (field === 'buttonText') {
+      updatedContent.buttonText = value;
+    }
+
+    updateSection(id, updatedContent);
+  };
+
   return (
-    <section
-      className={`py-16 px-8 bg-white cursor-pointer ${
-        isSelected ? 'outline outline-2 outline-blue-500' : ''
-      }`}
+    <Card
+      className={`py-12 px-6 bg-white cursor-pointer ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
       onClick={onClick}
     >
       <div className="container mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">{content.title}</h2>
+          <h2 className="text-3xl font-bold mb-4">
+            <InlineEditableField
+              value={content.title}
+              onChange={(newValue) => handleFieldUpdate('title', newValue)}
+              isEditable={isSelected}
+              className="inline-block"
+            />
+          </h2>
           {content.description && (
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {content.description}
+              <InlineEditableField
+                value={content.description}
+                onChange={(newValue) =>
+                  handleFieldUpdate('description', newValue)
+                }
+                isEditable={isSelected}
+                className="inline-block"
+              />
             </p>
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Information */}
-          <div className="space-y-8">
-            <h3 className="text-xl font-semibold mb-6">Get in touch</h3>
-
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          {/* Contact Info */}
+          <div className="lg:col-span-2 space-y-6">
             {content.email && (
-              <div className="flex items-center">
-                <Mail className="h-5 w-5 text-blue-500 mr-3" />
+              <div className="flex items-start">
+                <div className="bg-blue-100 p-3 rounded-full mr-4">
+                  <Mail className="h-6 w-6 text-blue-600" />
+                </div>
                 <div>
-                  <p className="text-sm text-gray-500">Email</p>
-                  <p className="text-gray-800">{content.email}</p>
+                  <h3 className="font-medium mb-1">Email</h3>
+                  <p className="text-gray-600">
+                    <InlineEditableField
+                      value={content.email}
+                      onChange={(newValue) =>
+                        handleFieldUpdate('email', newValue)
+                      }
+                      isEditable={isSelected}
+                      className="inline-block"
+                    />
+                  </p>
                 </div>
               </div>
             )}
 
             {content.phone && (
-              <div className="flex items-center">
-                <Phone className="h-5 w-5 text-blue-500 mr-3" />
+              <div className="flex items-start">
+                <div className="bg-blue-100 p-3 rounded-full mr-4">
+                  <Phone className="h-6 w-6 text-blue-600" />
+                </div>
                 <div>
-                  <p className="text-sm text-gray-500">Phone</p>
-                  <p className="text-gray-800">{content.phone}</p>
+                  <h3 className="font-medium mb-1">Phone</h3>
+                  <p className="text-gray-600">
+                    <InlineEditableField
+                      value={content.phone}
+                      onChange={(newValue) =>
+                        handleFieldUpdate('phone', newValue)
+                      }
+                      isEditable={isSelected}
+                      className="inline-block"
+                    />
+                  </p>
                 </div>
               </div>
             )}
 
             {content.address && (
-              <div className="flex items-center">
-                <MapPin className="h-5 w-5 text-blue-500 mr-3" />
-                <div>
-                  <p className="text-sm text-gray-500">Address</p>
-                  <p className="text-gray-800">{content.address}</p>
+              <div className="flex items-start">
+                <div className="bg-blue-100 p-3 rounded-full mr-4">
+                  <MapPin className="h-6 w-6 text-blue-600" />
                 </div>
-              </div>
-            )}
-
-            {/* Social Links */}
-            {content.socialLinks && content.socialLinks.length > 0 && (
-              <div className="mt-8">
-                <h4 className="text-lg font-medium mb-4">Connect with us</h4>
-                <div className="flex space-x-4">
-                  {content.socialLinks.map((link) => (
-                    <a
-                      key={link.id}
-                      href={link.link}
-                      className="text-gray-500 hover:text-blue-500 transition-colors"
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      {link.label}
-                    </a>
-                  ))}
+                <div>
+                  <h3 className="font-medium mb-1">Address</h3>
+                  <p className="text-gray-600">
+                    <InlineEditableField
+                      value={content.address}
+                      onChange={(newValue) =>
+                        handleFieldUpdate('address', newValue)
+                      }
+                      isEditable={isSelected}
+                      className="inline-block whitespace-pre-wrap"
+                    />
+                  </p>
                 </div>
               </div>
             )}
           </div>
 
           {/* Contact Form */}
-          {content.showForm !== false && (
-            <div className="bg-gray-50 p-8 rounded-lg">
-              <h3 className="text-xl font-semibold mb-6">Send us a message</h3>
+          <div className="lg:col-span-3">
+            <Card className="p-6 shadow-md">
+              <h3 className="text-xl font-bold mb-4">
+                <InlineEditableField
+                  value={content.formTitle || 'Send us a message'}
+                  onChange={(newValue) =>
+                    handleFieldUpdate('formTitle', newValue)
+                  }
+                  isEditable={isSelected}
+                  className="inline-block"
+                />
+              </h3>
               <form>
-                <div className="grid grid-cols-1 gap-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Name
-                    </label>
-                    <input
+                    <Input
                       type="text"
-                      id="name"
-                      name="name"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Name"
+                      className="w-full"
+                      onClick={(e) => e.stopPropagation()}
                     />
                   </div>
                   <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Email
-                    </label>
-                    <input
+                    <Input
                       type="email"
-                      id="email"
-                      name="email"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Email"
+                      className="w-full"
+                      onClick={(e) => e.stopPropagation()}
                     />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="message"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows={4}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    ></textarea>
-                  </div>
-                  <div>
-                    <button
-                      type="submit"
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors"
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      Send Message
-                    </button>
                   </div>
                 </div>
+                <div className="mb-4">
+                  <Input
+                    type="text"
+                    placeholder="Subject"
+                    className="w-full"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </div>
+                <div className="mb-6">
+                  <Textarea
+                    placeholder="Your message"
+                    rows={4}
+                    className="w-full"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </div>
+                <div>
+                  <Button
+                    type="submit"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                  >
+                    <InlineEditableField
+                      value={content.buttonText || 'Send Message'}
+                      onChange={(newValue) =>
+                        handleFieldUpdate('buttonText', newValue)
+                      }
+                      isEditable={isSelected}
+                      className="text-white"
+                    />
+                  </Button>
+                </div>
               </form>
-            </div>
-          )}
-        </div>
-
-        {/* Map Embed */}
-        {content.mapUrl && (
-          <div className="mt-12 h-80 bg-gray-200 rounded-lg overflow-hidden">
-            <iframe
-              title="Location Map"
-              src={content.mapUrl}
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-            ></iframe>
+            </Card>
           </div>
-        )}
+        </div>
       </div>
-    </section>
+    </Card>
   );
 };
 
