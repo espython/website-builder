@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, JSX } from 'react';
 import {
   Section,
   TestimonialsContent,
@@ -11,10 +11,183 @@ import { Trash, Plus, GripVertical, Star, User } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { useSectionEditor } from '@/features/builder/hooks/useSectionEditor';
 
+// Import DnD kit
+import {
+  DndContext,
+  closestCenter,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Input } from '@/shared/components/ui/input';
+import { Textarea } from '@/shared/components/ui/textarea';
+import { Label } from '@/shared/components/ui/label';
+import { Button } from '@/shared/components/ui/button';
+import { Card, CardContent } from '@/shared/components/ui/card';
+
 interface TestimonialsEditorProps {
   section: Section;
   updateSection: (id: string, content: SectionContent) => void;
 }
+
+// Sortable Testimonial Item Component
+interface SortableTestimonialItemProps {
+  testimonial: Testimonial;
+  index: number;
+  onRemove: (index: number) => void;
+  onChange: (
+    index: number,
+    field: keyof Testimonial,
+    value: string | number
+  ) => void;
+  renderRatingStars: (index: number, rating: number) => JSX.Element;
+}
+
+const SortableTestimonialItem = ({
+  testimonial,
+  index,
+  onRemove,
+  onChange,
+  renderRatingStars,
+}: SortableTestimonialItemProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: testimonial.id,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition: transition || 'transform 200ms cubic-bezier(0.25, 1, 0.5, 1)',
+    zIndex: isDragging ? 10 : 1,
+    opacity: isDragging ? 0.8 : 1,
+  };
+
+  return (
+    <Card
+      ref={setNodeRef}
+      style={style}
+      className={`mb-3 ${isDragging ? 'shadow-lg ring-2 ring-primary/20' : 'hover:shadow-md'} transition-shadow duration-200`}
+    >
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between mb-4">
+          <div
+            className={`flex items-center cursor-grab p-1 rounded-md ${isDragging ? 'bg-gray-100' : 'hover:bg-gray-100'} transition-colors duration-200`}
+            {...attributes}
+            {...listeners}
+          >
+            <GripVertical
+              size={18}
+              className={`${isDragging ? 'text-primary' : 'text-gray-400'} transition-colors duration-200`}
+            />
+            <span className="ml-2 font-medium text-sm text-gray-700">
+              Testimonial {index + 1}
+            </span>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onRemove(index)}
+            className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors duration-200"
+          >
+            <Trash size={16} />
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="md:col-span-1">
+            <div className="aspect-square bg-gray-100 rounded-md flex items-center justify-center overflow-hidden">
+              {testimonial.avatar ? (
+                <img
+                  src={testimonial.avatar}
+                  alt={`Avatar of ${testimonial.author}`}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src =
+                      'https://via.placeholder.com/150?text=Avatar';
+                  }}
+                />
+              ) : (
+                <div className="text-center text-gray-400">
+                  <User size={32} className="mx-auto mb-1" />
+                  <span className="text-xs">No avatar</span>
+                </div>
+              )}
+            </div>
+            <div className="mt-2">
+              <Label htmlFor={`avatar-${index}`} className="text-xs">
+                Avatar URL
+              </Label>
+              <Input
+                id={`avatar-${index}`}
+                value={testimonial.avatar || ''}
+                onChange={(e) => onChange(index, 'avatar', e.target.value)}
+                className="mt-1"
+                placeholder="https://..."
+              />
+            </div>
+          </div>
+
+          <div className="md:col-span-3 space-y-3">
+            <div>{renderRatingStars(index, testimonial.rating)}</div>
+            <div>
+              <Label htmlFor={`content-${index}`}>Testimonial Text</Label>
+              <Textarea
+                id={`content-${index}`}
+                value={testimonial.content}
+                onChange={(e) => onChange(index, 'content', e.target.value)}
+                rows={3}
+                className="mt-1"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor={`author-${index}`}>Name</Label>
+                <Input
+                  id={`author-${index}`}
+                  value={testimonial.author}
+                  onChange={(e) => onChange(index, 'author', e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor={`role-${index}`}>Role</Label>
+                <Input
+                  id={`role-${index}`}
+                  value={testimonial.role || ''}
+                  onChange={(e) => onChange(index, 'role', e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor={`company-${index}`}>Company</Label>
+              <Input
+                id={`company-${index}`}
+                value={testimonial.company || ''}
+                onChange={(e) => onChange(index, 'company', e.target.value)}
+                className="mt-1"
+              />
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 const TestimonialsEditor = ({
   section,
@@ -24,6 +197,40 @@ const TestimonialsEditor = ({
   const [content, setContent] = useState<TestimonialsContent>(
     section.content as TestimonialsContent
   );
+
+  // Configure sensors for drag and drop
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 5, // 5px movement required before drag starts
+    },
+  });
+
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 150, // 150ms delay before drag starts
+      tolerance: 5, // 5px movement allowed before cancelling
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, touchSensor);
+
+  // Handle drag end for testimonial reordering
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = content.testimonials.findIndex(
+        (item) => item.id === active.id
+      );
+      const newIndex = content.testimonials.findIndex(
+        (item) => item.id === over.id
+      );
+
+      if (oldIndex !== -1 && newIndex !== -1) {
+        moveTestimonial(oldIndex, newIndex);
+      }
+    }
+  };
 
   // Update local state when section changes
   useEffect(() => {
@@ -90,16 +297,6 @@ const TestimonialsEditor = ({
     const [movedTestimonial] = updatedTestimonials.splice(fromIndex, 1);
     updatedTestimonials.splice(toIndex, 0, movedTestimonial);
     handleChange('testimonials', updatedTestimonials);
-  };
-
-  // Move testimonial up
-  const moveTestimonialUp = (index: number) => {
-    moveTestimonial(index, index - 1);
-  };
-
-  // Move testimonial down
-  const moveTestimonialDown = (index: number) => {
-    moveTestimonial(index, index + 1);
   };
 
   // Helper function to render star rating input
@@ -196,174 +393,27 @@ const TestimonialsEditor = ({
             </div>
           ) : (
             <div className="space-y-6">
-              {content.testimonials.map((testimonial, index) => (
-                <div
-                  key={testimonial.id}
-                  className="p-4 border border-gray-200 rounded-md bg-white"
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={content.testimonials.map((t) => t.id)}
+                  strategy={verticalListSortingStrategy}
                 >
-                  <div className="flex justify-between items-center mb-3">
-                    <div className="flex items-center">
-                      <GripVertical size={16} className="text-gray-400 mr-2" />
-                      <span className="text-sm font-medium">
-                        Testimonial {index + 1}
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <button
-                        type="button"
-                        onClick={() => moveTestimonialUp(index)}
-                        disabled={index === 0}
-                        className={`p-1 ${
-                          index === 0
-                            ? 'text-gray-300 cursor-not-allowed'
-                            : 'text-gray-500 hover:text-gray-700'
-                        }`}
-                        title="Move up"
-                      >
-                        ↑
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => moveTestimonialDown(index)}
-                        disabled={index === content.testimonials.length - 1}
-                        className={`p-1 ${
-                          index === content.testimonials.length - 1
-                            ? 'text-gray-300 cursor-not-allowed'
-                            : 'text-gray-500 hover:text-gray-700'
-                        }`}
-                        title="Move down"
-                      >
-                        ↓
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => removeTestimonial(index)}
-                        className="p-1 text-gray-400 hover:text-red-500"
-                        title="Remove testimonial"
-                      >
-                        <Trash size={16} />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div className="md:col-span-1">
-                      <div className="flex flex-col items-center">
-                        <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 mb-2">
-                          {testimonial.avatar ? (
-                            <img
-                              src={testimonial.avatar}
-                              alt={`${testimonial.author} avatar`}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).src =
-                                  'https://via.placeholder.com/150?text=Avatar';
-                              }}
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                              <User size={40} className="text-gray-400" />
-                            </div>
-                          )}
-                        </div>
-                        <div className="w-full">
-                          <label className="block text-xs font-medium text-gray-700 mb-1">
-                            Avatar URL
-                          </label>
-                          <input
-                            type="text"
-                            value={testimonial.avatar || ''}
-                            onChange={(e) =>
-                              handleTestimonialChange(
-                                index,
-                                'avatar',
-                                e.target.value
-                              )
-                            }
-                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md"
-                          />
-                        </div>
-                        <div className="mt-3 w-full">
-                          {renderRatingStars(index, testimonial.rating)}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="md:col-span-2 space-y-3">
-                      <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Testimonial Text
-                        </label>
-                        <textarea
-                          value={testimonial.content}
-                          onChange={(e) =>
-                            handleTestimonialChange(
-                              index,
-                              'content',
-                              e.target.value
-                            )
-                          }
-                          rows={3}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                        ></textarea>
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">
-                            Name
-                          </label>
-                          <input
-                            type="text"
-                            value={testimonial.author}
-                            onChange={(e) =>
-                              handleTestimonialChange(
-                                index,
-                                'author',
-                                e.target.value
-                              )
-                            }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">
-                            Role
-                          </label>
-                          <input
-                            type="text"
-                            value={testimonial.role || ''}
-                            onChange={(e) =>
-                              handleTestimonialChange(
-                                index,
-                                'role',
-                                e.target.value
-                              )
-                            }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Company
-                        </label>
-                        <input
-                          type="text"
-                          value={testimonial.company || ''}
-                          onChange={(e) =>
-                            handleTestimonialChange(
-                              index,
-                              'company',
-                              e.target.value
-                            )
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  {content.testimonials.map((testimonial, index) => (
+                    <SortableTestimonialItem
+                      key={testimonial.id}
+                      testimonial={testimonial}
+                      index={index}
+                      onRemove={removeTestimonial}
+                      onChange={handleTestimonialChange}
+                      renderRatingStars={renderRatingStars}
+                    />
+                  ))}
+                </SortableContext>
+              </DndContext>
             </div>
           )}
         </div>

@@ -3,6 +3,7 @@
 import { HeaderContent } from '@/features/sections/types/section';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 
 interface HeaderSectionProps {
   content: HeaderContent;
@@ -28,7 +29,13 @@ const HeaderSection = ({
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="text-xl font-bold text-gray-800">
-            {content.logo || 'WebBuilder'}
+            <Avatar className="rounded-lg ">
+              <AvatarImage
+                src={content?.logo || undefined}
+                className="max-w-16 max-h-16"
+              />
+              <AvatarFallback>Logo</AvatarFallback>
+            </Avatar>
           </div>
 
           {/* Desktop Navigation */}

@@ -5,6 +5,7 @@ import {
   useSections,
   useSelectedSectionId,
   useSelectSection,
+  useReorderSections,
 } from '@/features/sections/hooks/sections-hook';
 import {
   ContactContent,
@@ -35,16 +36,118 @@ import FooterSection from '@/features/sections/components/FooterSection';
 import AddSectionButton from '@/features/sections/components/AddSectionButton';
 
 // Import icons
-import { Smartphone, Tablet, Monitor, ArrowDownUp, Eye } from 'lucide-react';
+import {
+  Smartphone,
+  Tablet,
+  Monitor,
+  ArrowDownUp,
+  Eye,
+  GripVertical,
+} from 'lucide-react';
+
+// Import DnD kit
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+  closestCenter,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 type PreviewMode = 'mobile' | 'tablet' | 'desktop';
+
+// Sortable section wrapper component
+interface SortableSectionProps {
+  id: string;
+  children: React.ReactNode;
+}
+
+const SortableSection = ({ id, children }: SortableSectionProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition: transition || 'transform 250ms cubic-bezier(0.25, 1, 0.5, 1)',
+    zIndex: isDragging ? 10 : 1,
+    position: 'relative' as const,
+    touchAction: 'none' as const,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`${isDragging ? 'opacity-90' : 'opacity-100'} transition-opacity duration-200`}
+    >
+      <div
+        className={`group relative ${isDragging ? 'ring-2 ring-primary/30 rounded-md' : ''}`}
+        {...attributes}
+      >
+        <div
+          className={`${isDragging ? 'scale-[0.99] blur-[0.3px]' : 'scale-100'} transition-all duration-200`}
+        >
+          {children}
+        </div>
+        <div
+          className={`absolute left-2 top-1/2 -translate-y-1/2 ${isDragging ? 'opacity-100 bg-primary/10' : 'opacity-0 group-hover:opacity-100 bg-white/80'} transition-all duration-200 cursor-grab active:cursor-grabbing p-1.5 rounded-md border border-gray-200 shadow-sm`}
+          {...listeners}
+        >
+          <GripVertical
+            size={16}
+            className={`${isDragging ? 'text-primary' : 'text-gray-500'} transition-colors duration-200`}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // Create a preview component that manages displaying the right section
 const PreviewArea = () => {
   const sections = useSections();
   const selectedSectionId = useSelectedSectionId();
   const selectSection = useSelectSection();
+  const reorderSections = useReorderSections();
   const [previewMode, setPreviewMode] = useState<PreviewMode>('desktop');
+
+  // Configure drag sensors with higher activation constraints for better user experience
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 8, // 8px movement required before drag starts
+    },
+  });
+
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 200, // 200ms delay before drag starts
+      tolerance: 8, // 8px movement allowed before cancelling
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, touchSensor);
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      reorderSections(active.id as string, over.id as string);
+    }
+  };
 
   const handleSectionClick = useCallback(
     (sectionId: string) => {
@@ -222,9 +325,24 @@ const PreviewArea = () => {
           className={`bg-white transition-all duration-300 ${getPreviewContainerClass()}`}
         >
           {sections.length > 0 ? (
-            <div className="min-h-full flex flex-col">
-              {sections.map(renderSection)}
-            </div>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={sections.map((section) => section.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                <div className="min-h-full flex flex-col">
+                  {sections.map((section) => (
+                    <SortableSection key={section.id} id={section.id}>
+                      {renderSection(section)}
+                    </SortableSection>
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
           ) : (
             <div className="flex items-center justify-center py-24">
               <div className="text-center p-8 max-w-md">

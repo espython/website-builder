@@ -73,3 +73,19 @@ export const useSectionMovementActions = () => {
     }))
   );
 };
+
+// Get reordering action for drag and drop
+export const useReorderSections = () =>
+  useSectionsStore(useShallow((state) => state.reorderSections));
+
+// NEW: Get undo/redo actions and state
+export const useUndoRedo = () => {
+  return useSectionsStore(
+    useShallow((state) => ({
+      undo: state.undo,
+      redo: state.redo,
+      canUndo: state.canUndo,
+      canRedo: state.canRedo,
+    }))
+  );
+};
