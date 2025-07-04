@@ -111,7 +111,7 @@ const HeaderSection = ({
           {/* Logo */}
           <div className="text-xl font-bold text-gray-800">
             {/* We'll keep using Avatar for the logo instead of text editing */}
-            <Avatar>
+            <Avatar className="w-14 h-14 rounded-lg">
               <AvatarImage src={content?.logo || undefined} />
               <AvatarFallback>Logo</AvatarFallback>
             </Avatar>

@@ -5,9 +5,20 @@ import {
   useSelectedSection,
   useUpdateSection,
   useDeleteSection,
+  useAddSection,
 } from '@/features/sections/hooks/sections-hook';
 import { SectionType } from '@/features/sections/types/section';
-import { Trash2 } from 'lucide-react';
+import {
+  Trash2,
+  Layout,
+  Image,
+  FileText,
+  MessageSquare,
+  Grid,
+  Mail,
+  Store,
+  CheckCircle,
+} from 'lucide-react';
 import HeroEditor from './editors/HeroEditor';
 import FeaturesEditor from './editors/FeaturesEditor';
 import TextEditor from './editors/TextEditor';
@@ -18,29 +29,56 @@ import GalleryEditor from './editors/GalleryEditor';
 import CTAEditor from './editors/CTAEditor';
 import HeaderEditor from './editors/HeaderEditor';
 import FooterEditor from './editors/FooterEditor';
-import AddSectionButton from '@/features/sections/components/AddSectionButton';
+import { generateSampleContent } from '@/features/sections/utils/sample-content';
+
+// Define section types with their icons
+const sectionTypes = [
+  { type: SectionType.HEADER, label: 'Header', icon: Layout },
+  { type: SectionType.HERO, label: 'Hero', icon: Image },
+  { type: SectionType.FEATURES, label: 'Features', icon: CheckCircle },
+  { type: SectionType.TEXT, label: 'Text', icon: FileText },
+  { type: SectionType.GALLERY, label: 'Gallery', icon: Grid },
+  {
+    type: SectionType.TESTIMONIALS,
+    label: 'Testimonials',
+    icon: MessageSquare,
+  },
+  { type: SectionType.PRICING, label: 'Pricing', icon: Store },
+  { type: SectionType.CTA, label: 'CTA', icon: CheckCircle },
+  { type: SectionType.CONTACT, label: 'Contact', icon: Mail },
+  { type: SectionType.FOOTER, label: 'Footer', icon: Layout },
+];
 
 const SectionEditor = () => {
   const selectedSection = useSelectedSection();
   const updateSection = useUpdateSection();
   const deleteSection = useDeleteSection();
+  const addSection = useAddSection();
+
+  const handleAddSection = (type: SectionType) => {
+    // Generate sample content based on section type
+    const sampleContent = generateSampleContent(type);
+    addSection(type, sampleContent);
+  };
 
   // Handle delete confirmation
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   if (!selectedSection) {
     return (
-      <div className="p-6 text-center">
-        <div className="bg-gray-50 rounded-lg p-8 border border-gray-200">
-          <h3 className="text-lg font-medium text-gray-800 mb-2">
-            No Section Selected
-          </h3>
-          <p className="text-gray-500 text-sm mb-6">
-            Select a section from the preview area to edit its properties
-          </p>
-          <div className="flex justify-center">
-            <AddSectionButton />
-          </div>
+      <div>
+        <h2 className="text-lg font-medium text-center p-4">Add Section</h2>
+        <div className="mt-2 w-full h-[80%] overflow-y-auto p-8 grid grid-cols-2 gap-1">
+          {sectionTypes.map((section) => (
+            <button
+              key={section.type}
+              onClick={() => handleAddSection(section.type)}
+              className="flex flex-col items-center p-3 hover:bg-blue-50 rounded-md transition-colors"
+            >
+              <section.icon size={24} className="text-blue-600 mb-1" />
+              <span className="text-sm text-gray-700">{section.label}</span>
+            </button>
+          ))}
         </div>
       </div>
     );
@@ -48,7 +86,7 @@ const SectionEditor = () => {
 
   const handleDeleteSection = () => {
     if (showDeleteConfirm) {
-      deleteSection(selectedSection.id);
+      deleteSection(selectedSection?.id);
       setShowDeleteConfirm(false);
     } else {
       setShowDeleteConfirm(true);
@@ -57,7 +95,7 @@ const SectionEditor = () => {
 
   // Determine which editor to render based on section type
   const renderEditor = () => {
-    switch (selectedSection.type) {
+    switch (selectedSection?.type) {
       case SectionType.HERO:
         return (
           <HeroEditor section={selectedSection} updateSection={updateSection} />
@@ -123,7 +161,7 @@ const SectionEditor = () => {
         return (
           <div className="p-6 text-center">
             <p className="text-gray-500">
-              No editor available for this section type: {selectedSection.type}
+              No editor available for this section type: {selectedSection?.type}
             </p>
           </div>
         );
@@ -136,7 +174,7 @@ const SectionEditor = () => {
         <h2 className="text-xl font-semibold text-gray-800">
           Edit{' '}
           {selectedSection.type.charAt(0).toUpperCase() +
-            selectedSection.type.slice(1)}{' '}
+            selectedSection?.type.slice(1)}{' '}
           Section
         </h2>
 

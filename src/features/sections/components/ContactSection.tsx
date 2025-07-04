@@ -38,7 +38,7 @@ const ContactSection = ({
     } else if (field === 'address') {
       updatedContent.address = value;
     } else if (field === 'formTitle') {
-      updatedContent.formTitle = value;
+      updatedContent.title = value;
     } else if (field === 'buttonText') {
       updatedContent.buttonText = value;
     }
@@ -147,7 +147,7 @@ const ContactSection = ({
             <Card className="p-6 shadow-md">
               <h3 className="text-xl font-bold mb-4">
                 <InlineEditableField
-                  value={content.formTitle || 'Send us a message'}
+                  value={content.title || 'Send us a message'}
                   onChange={(newValue) =>
                     handleFieldUpdate('formTitle', newValue)
                   }

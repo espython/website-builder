@@ -104,6 +104,7 @@ export interface ContactContent {
   mapUrl?: string;
   showForm?: boolean;
   socialLinks?: FooterLink[];
+  buttonText?: string;
 }
 
 // Gallery section
