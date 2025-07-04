@@ -48,12 +48,12 @@ const ContactSection = ({
 
   return (
     <Card
-      className={`py-12 px-6 bg-white cursor-pointer rounded-none ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
+      className={`py-8 sm:py-10 md:py-12 px-4 sm:px-5 md:px-6 bg-white cursor-pointer rounded-none ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
       onClick={onClick}
     >
-      <div className="container mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">
+      <div className="container mx-auto px-2 sm:px-4">
+        <div className="text-center mb-8 sm:mb-10 md:mb-12">
+          <h2 className="text-2xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">
             <InlineEditableField
               value={content.title}
               onChange={(newValue) => handleFieldUpdate('title', newValue)}
@@ -62,7 +62,7 @@ const ContactSection = ({
             />
           </h2>
           {content.description && (
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
               <InlineEditableField
                 value={content.description}
                 onChange={(newValue) =>
@@ -75,17 +75,19 @@ const ContactSection = ({
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-5">
           {/* Contact Info */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             {content.email && (
               <div className="flex items-start">
-                <div className="bg-blue-100 p-3 rounded-full mr-4">
-                  <Mail className="h-6 w-6 text-blue-600" />
+                <div className="bg-blue-100 p-2 sm:p-3 rounded-full mr-3 sm:mr-4">
+                  <Mail className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
                 </div>
                 <div>
-                  <h3 className="font-medium mb-1">Email</h3>
-                  <p className="text-gray-600">
+                  <h3 className="font-medium mb-1 text-sm sm:text-base">
+                    Email
+                  </h3>
+                  <p className="text-gray-600 text-sm sm:text-base">
                     <InlineEditableField
                       value={content.email}
                       onChange={(newValue) =>
@@ -101,12 +103,14 @@ const ContactSection = ({
 
             {content.phone && (
               <div className="flex items-start">
-                <div className="bg-blue-100 p-3 rounded-full mr-4">
-                  <Phone className="h-6 w-6 text-blue-600" />
+                <div className="bg-blue-100 p-2 sm:p-3 rounded-full mr-3 sm:mr-4">
+                  <Phone className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
                 </div>
                 <div>
-                  <h3 className="font-medium mb-1">Phone</h3>
-                  <p className="text-gray-600">
+                  <h3 className="font-medium mb-1 text-sm sm:text-base">
+                    Phone
+                  </h3>
+                  <p className="text-gray-600 text-sm sm:text-base">
                     <InlineEditableField
                       value={content.phone}
                       onChange={(newValue) =>
@@ -122,12 +126,14 @@ const ContactSection = ({
 
             {content.address && (
               <div className="flex items-start">
-                <div className="bg-blue-100 p-3 rounded-full mr-4">
-                  <MapPin className="h-6 w-6 text-blue-600" />
+                <div className="bg-blue-100 p-2 sm:p-3 rounded-full mr-3 sm:mr-4">
+                  <MapPin className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
                 </div>
                 <div>
-                  <h3 className="font-medium mb-1">Address</h3>
-                  <p className="text-gray-600">
+                  <h3 className="font-medium mb-1 text-sm sm:text-base">
+                    Address
+                  </h3>
+                  <p className="text-gray-600 text-sm sm:text-base">
                     <InlineEditableField
                       value={content.address}
                       onChange={(newValue) =>
@@ -144,8 +150,8 @@ const ContactSection = ({
 
           {/* Contact Form */}
           <div className="lg:col-span-3">
-            <Card className="p-6 shadow-md">
-              <h3 className="text-xl font-bold mb-4">
+            <Card className="p-4 sm:p-5 md:p-6 shadow-md">
+              <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">
                 <InlineEditableField
                   value={content.title || 'Send us a message'}
                   onChange={(newValue) =>

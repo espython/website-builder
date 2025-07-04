@@ -59,24 +59,24 @@ const FooterSection = ({
 
   return (
     <Card
-      className={`bg-gray-900 text-white py-12 px-6 cursor-pointer rounded-none ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
+      className={`bg-gray-900 text-white py-8 sm:py-10 md:py-12 px-4 sm:px-5 md:px-6 cursor-pointer rounded-none ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
       onClick={onClick}
     >
-      <div className="container mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="container mx-auto px-2 sm:px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
           {/* Logo and description */}
           <div className="md:col-span-1">
-            <div className="mb-4">
+            <div className="mb-3 sm:mb-4">
               {content.logo?.image ? (
                 <div className="flex items-center">
                   <img
                     src={content.logo?.image}
                     alt="Logo"
-                    className="h-8 w-auto"
+                    className="h-6 sm:h-7 md:h-8 w-auto"
                   />
                 </div>
               ) : (
-                <div className="text-xl font-bold">
+                <div className="text-lg sm:text-xl font-bold">
                   <InlineEditableField
                     value={content.logo?.text || 'Website Name'}
                     onChange={(newValue) => handleFieldUpdate('logo', newValue)}
@@ -87,7 +87,7 @@ const FooterSection = ({
               )}
             </div>
             {content.description && (
-              <p className="text-gray-400 mb-6">
+              <p className="text-sm sm:text-base text-gray-400 mb-4 sm:mb-6">
                 <InlineEditableField
                   value={content.description}
                   onChange={(newValue) =>
@@ -103,7 +103,7 @@ const FooterSection = ({
           {/* Footer Columns */}
           {content.linkGroups?.map((column, columnIndex) => (
             <div key={columnIndex} className="md:col-span-1">
-              <h3 className="text-lg font-semibold mb-3">
+              <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3">
                 <InlineEditableField
                   value={column.title}
                   onChange={(newValue) =>
@@ -113,12 +113,12 @@ const FooterSection = ({
                   className="text-white"
                 />
               </h3>
-              <div className="flex flex-col space-y-2">
+              <div className="flex flex-col space-y-1.5 sm:space-y-2">
                 {column.links?.map((link, linkIndex) => (
                   <Button
                     key={linkIndex}
                     variant="link"
-                    className="text-gray-400 hover:text-white transition-colors justify-start p-0 h-auto"
+                    className="text-sm sm:text-base text-gray-400 hover:text-white transition-colors justify-start p-0 h-auto"
                     onClick={(e) => {
                       e.stopPropagation();
                       e.preventDefault();
@@ -144,7 +144,7 @@ const FooterSection = ({
 
         {/* Copyright */}
         {content.copyright && (
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+          <div className="border-t border-gray-800 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-gray-400 text-xs sm:text-sm">
             <InlineEditableField
               value={content.copyright}
               onChange={(newValue) => handleFieldUpdate('copyright', newValue)}

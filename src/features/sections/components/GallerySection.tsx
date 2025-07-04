@@ -43,12 +43,12 @@ const GallerySection = ({
 
   return (
     <Card
-      className={`py-12 px-6 bg-white cursor-pointer rounded-none ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
+      className={`py-8 sm:py-10 md:py-12 px-4 sm:px-5 md:px-6 bg-white cursor-pointer rounded-none ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
       onClick={onClick}
     >
-      <div className="container mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">
+      <div className="container mx-auto px-2 sm:px-4">
+        <div className="text-center mb-8 sm:mb-10 md:mb-12">
+          <h2 className="text-2xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">
             <InlineEditableField
               value={content.title}
               onChange={(newValue) => handleFieldUpdate('title', newValue)}
@@ -57,7 +57,7 @@ const GallerySection = ({
             />
           </h2>
           {content.description && (
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
               <InlineEditableField
                 value={content.description}
                 onChange={(newValue) =>
@@ -70,7 +70,7 @@ const GallerySection = ({
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
           {content.items?.map((item, index) => (
             <div
               key={item.id || index}
@@ -81,11 +81,11 @@ const GallerySection = ({
                 <img
                   src={item.image}
                   alt={item.caption || `Gallery item ${index + 1}`}
-                  className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
+                  className="w-full h-48 sm:h-56 md:h-64 object-cover transition-transform duration-300 group-hover:scale-110"
                 />
               )}
               {(item.caption || isSelected) && (
-                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 p-4 text-white">
+                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 p-2 sm:p-3 md:p-4 text-white">
                   <InlineEditableField
                     value={item.caption || `Image caption`}
                     onChange={(newValue) =>
@@ -95,7 +95,7 @@ const GallerySection = ({
                       )
                     }
                     isEditable={isSelected}
-                    className="block"
+                    className="block text-sm sm:text-base"
                     placeholder="Add caption..."
                   />
                 </div>

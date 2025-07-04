@@ -69,12 +69,12 @@ const TestimonialsSection = ({
 
   return (
     <Card
-      className={`py-12 px-6 bg-white cursor-pointer rounded-none ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
+      className={`py-8 sm:py-10 md:py-12 px-4 sm:px-5 md:px-6 bg-white cursor-pointer rounded-none ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
       onClick={onClick}
     >
-      <div className="container mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">
+      <div className="container mx-auto px-2 sm:px-4">
+        <div className="text-center mb-8 sm:mb-10 md:mb-12">
+          <h2 className="text-2xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">
             <InlineEditableField
               value={content.title}
               onChange={(newValue) => handleFieldUpdate('title', newValue)}
@@ -83,7 +83,7 @@ const TestimonialsSection = ({
             />
           </h2>
           {content.description && (
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
               <InlineEditableField
                 value={content.description}
                 onChange={(newValue) =>
@@ -96,20 +96,20 @@ const TestimonialsSection = ({
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {content.testimonials?.map((testimonial, index) => (
             <Card
               key={testimonial.id || index}
-              className="p-6 flex flex-col h-full hover:shadow-md transition-shadow"
+              className="p-4 sm:p-5 md:p-6 flex flex-col h-full hover:shadow-md transition-shadow"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Rating Stars */}
-              <div className="flex mb-4">
+              <div className="flex mb-3 sm:mb-4">
                 {renderRating(testimonial.rating || 5)}
               </div>
 
               {/* Testimonial Content */}
-              <div className="text-gray-700 mb-6 flex-grow">
+              <div className="text-gray-700 mb-4 sm:mb-6 flex-grow text-sm sm:text-base">
                 <InlineEditableField
                   value={testimonial.content}
                   onChange={(newValue) =>
@@ -121,9 +121,9 @@ const TestimonialsSection = ({
               </div>
 
               {/* Author Info */}
-              <div className="flex items-center mt-4">
+              <div className="flex items-center mt-3 sm:mt-4">
                 {testimonial.avatar && (
-                  <Avatar className="h-10 w-10 mr-3">
+                  <Avatar className="h-8 w-8 sm:h-10 sm:w-10 mr-2 sm:mr-3">
                     <AvatarImage src={testimonial.avatar} />
                     <AvatarFallback>
                       {testimonial.author?.substring(0, 2).toUpperCase()}
@@ -131,7 +131,7 @@ const TestimonialsSection = ({
                   </Avatar>
                 )}
                 <div>
-                  <div className="font-medium">
+                  <div className="font-medium text-sm sm:text-base">
                     <InlineEditableField
                       value={testimonial.author}
                       onChange={(newValue) =>
@@ -145,7 +145,7 @@ const TestimonialsSection = ({
                     />
                   </div>
                   {(testimonial.role || testimonial.company) && (
-                    <div className="text-sm text-gray-500">
+                    <div className="text-xs sm:text-sm text-gray-500">
                       <InlineEditableField
                         value={testimonial.role || ''}
                         onChange={(newValue) =>

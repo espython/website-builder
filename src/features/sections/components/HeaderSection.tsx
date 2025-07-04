@@ -103,29 +103,29 @@ const HeaderSection = ({
 
   return (
     <Card
-      className={`py-4 px-6 bg-white border-b border-gray-200 sticky top-0 z-50 cursor-pointer rounded-none shadow-sm ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
+      className={`py-3 md:py-4 px-4 md:px-6 bg-white border-b border-gray-200 sticky top-0 z-50 cursor-pointer rounded-none shadow-sm ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
       onClick={onClick}
     >
-      <div className="container mx-auto">
+      <div className="container mx-auto px-2 sm:px-4 lg:px-6">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="text-xl font-bold text-gray-800">
             {/* We'll keep using Avatar for the logo instead of text editing */}
-            <Avatar className="w-14 h-14 rounded-lg">
+            <Avatar className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-lg">
               <AvatarImage src={content?.logo || undefined} />
               <AvatarFallback>Logo</AvatarFallback>
             </Avatar>
           </div>
 
           {/* Desktop menu */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-3 lg:space-x-6">
             {content.menuItems?.map((item) => (
               <InlineEditableField
                 key={item.id}
                 value={item.label}
                 onChange={(newValue) => handleFieldUpdate(item.id, newValue)}
                 isEditable={isSelected}
-                className="text-gray-600 hover:text-blue-600 transition-colors"
+                className="text-sm lg:text-base text-gray-600 hover:text-blue-600 transition-colors"
               />
             ))}
 

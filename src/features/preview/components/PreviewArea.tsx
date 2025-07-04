@@ -270,13 +270,35 @@ const PreviewArea = () => {
   const getPreviewContainerClass = () => {
     switch (previewMode) {
       case 'mobile':
-        return 'max-w-sm mx-auto border-x border-gray-300 shadow-lg';
+        return 'max-w-[375px] mx-auto border border-gray-300 rounded-[32px] shadow-lg overflow-hidden bg-white relative pt-8 pb-10';
       case 'tablet':
-        return 'max-w-2xl mx-auto border-x border-gray-300 shadow-lg';
+        return 'max-w-[768px] mx-auto border border-gray-300 rounded-3xl shadow-lg overflow-hidden';
       case 'desktop':
       default:
         return 'w-full';
     }
+  };
+
+  // Render device-specific UI elements
+  const renderDeviceUI = () => {
+    if (previewMode === 'mobile') {
+      return (
+        <>
+          {/* Mobile notch */}
+          <div className="absolute top-0 left-0 right-0 flex justify-center h-8">
+            <div className="bg-gray-800 w-36 h-6 rounded-b-xl flex items-center justify-center">
+              <div className="w-12 h-2.5 rounded-full bg-gray-700 mr-2"></div>
+              <div className="w-2.5 h-2.5 rounded-full bg-gray-600"></div>
+            </div>
+          </div>
+          {/* Mobile home indicator */}
+          <div className="absolute bottom-0 left-0 right-0 h-10 flex justify-center items-center">
+            <div className="w-32 h-1.5 bg-gray-800 rounded-full"></div>
+          </div>
+        </>
+      );
+    }
+    return null;
   };
 
   return (
@@ -333,6 +355,7 @@ const PreviewArea = () => {
         <div
           className={`bg-white transition-all duration-300 ${getPreviewContainerClass()}`}
         >
+          {renderDeviceUI()}
           {sections.length > 0 ? (
             <DndContext
               sensors={sensors}

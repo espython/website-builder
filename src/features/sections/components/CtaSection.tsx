@@ -32,12 +32,14 @@ const CtaSection = ({ content, isSelected, onClick, id }: CtaSectionProps) => {
 
   return (
     <Card
-      className={`py-16 px-8 bg-blue-600 relative overflow-hidden cursor-pointer rounded-none ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
+      className={`py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8 bg-blue-600 relative overflow-hidden cursor-pointer rounded-none ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
       onClick={onClick}
       style={
         content.backgroundImage
           ? {
               backgroundImage: `url(${content.backgroundImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
             }
           : {}
       }
@@ -47,9 +49,9 @@ const CtaSection = ({ content, isSelected, onClick, id }: CtaSectionProps) => {
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
       )}
 
-      <div className="container mx-auto relative z-10">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
+      <div className="container mx-auto px-2 sm:px-4 relative z-10">
+        <div className="max-w-xl sm:max-w-2xl md:max-w-3xl mx-auto text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-5 md:mb-6 text-white">
             <InlineEditableField
               value={content.title}
               onChange={(newValue) => handleFieldUpdate('title', newValue)}
@@ -59,7 +61,7 @@ const CtaSection = ({ content, isSelected, onClick, id }: CtaSectionProps) => {
           </h2>
 
           {content.description && (
-            <p className="text-lg md:text-xl mb-8 text-white text-opacity-90">
+            <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-7 md:mb-8 text-white text-opacity-90">
               <InlineEditableField
                 value={content.description}
                 onChange={(newValue) =>
@@ -75,7 +77,7 @@ const CtaSection = ({ content, isSelected, onClick, id }: CtaSectionProps) => {
             <Button
               variant="default"
               size="lg"
-              className="bg-white hover:bg-gray-100 text-blue-600 font-medium px-8 py-3 text-lg transition-colors shadow-md"
+              className="bg-white hover:bg-gray-100 text-blue-600 font-medium text-sm sm:text-base md:text-lg px-6 sm:px-7 md:px-8 py-2.5 sm:py-3 transition-colors shadow-md"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();

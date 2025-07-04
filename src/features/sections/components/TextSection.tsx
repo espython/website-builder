@@ -34,12 +34,12 @@ const TextSection = ({
 
   return (
     <Card
-      className={`py-12 px-6 bg-white cursor-pointer rounded-none ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
+      className={`py-8 sm:py-10 md:py-12 px-4 sm:px-5 md:px-6 bg-white cursor-pointer rounded-none ${isSelected ? 'outline outline-2 outline-blue-500' : ''}`}
       onClick={onClick}
     >
-      <div className="container mx-auto max-w-4xl">
+      <div className="container mx-auto max-w-4xl px-2 sm:px-4 lg:px-6">
         {content.title && (
-          <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+          <h2 className="text-2xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-4 sm:mb-5 md:mb-6 text-center">
             <InlineEditableField
               value={content.title}
               onChange={(newValue) => handleFieldUpdate('title', newValue)}
@@ -50,7 +50,7 @@ const TextSection = ({
           </h2>
         )}
 
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-base sm:prose-lg max-w-none text-gray-600">
           <InlineEditableField
             value={content.content}
             onChange={(newValue) => handleFieldUpdate('content', newValue)}
@@ -58,7 +58,9 @@ const TextSection = ({
             className="block whitespace-pre-wrap"
             placeholder="Add your content here..."
           >
-            <div className="whitespace-pre-wrap">{content.content}</div>
+            <div className="whitespace-pre-wrap text-sm sm:text-base md:text-lg">
+              {content.content}
+            </div>
           </InlineEditableField>
         </div>
       </div>
