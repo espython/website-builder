@@ -5,6 +5,14 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
 import { Section, SectionType, SectionContent } from '../types/section';
 
+export interface SiteExportData {
+  projectId: string;
+  projectName: string;
+  version: string;
+  exportDate: string;
+  sections: Section[];
+}
+
 interface SectionsState {
   sections: Section[];
   selectedSectionId: string | null;
@@ -13,9 +21,12 @@ interface SectionsState {
   deleteSection: (id: string) => void;
   moveSectionUp: (id: string) => void;
   moveSectionDown: (id: string) => void;
-  exportSite: () => void;
-  importSite: (data: { sections: Section[] }) => void;
+  exportSite: (projectName?: string) => void;
+  importSite: (data: SiteExportData | { sections: Section[] }) => void;
   selectSection: (id: string) => void;
+  clearSections: () => void;
+  getSectionById: (id: string) => Section | undefined;
+  getSectionsByType: (type: SectionType) => Section[];
 }
 
 export const useSectionsStore = create<SectionsState>()(
@@ -100,28 +111,40 @@ export const useSectionsStore = create<SectionsState>()(
         });
       },
 
-      exportSite: () => {
+      exportSite: (projectName = 'website') => {
         if (typeof window === 'undefined') return; // Guard for server-side
 
         const { sections } = get();
-        const data = JSON.stringify({ sections }, null, 2);
+
+        // Create export data with metadata
+        const exportData: SiteExportData = {
+          projectId: `export-${Date.now()}`,
+          projectName: projectName,
+          version: '1.0.0', // App version
+          exportDate: new Date().toISOString(),
+          sections,
+        };
+
+        const data = JSON.stringify(exportData, null, 2);
         const blob = new Blob([data], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
 
         // Create a temporary link and trigger download
         const link = document.createElement('a');
         link.href = url;
-        link.download = `website-export-${new Date().toISOString().split('T')[0]}.json`;
+        link.download = `${projectName.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.json`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
 
         // Cleanup URL object
         URL.revokeObjectURL(url);
+
+        return exportData;
       },
 
       importSite: (data) => {
-        if (data && Array.isArray(data.sections)) {
+        if ('sections' in data && Array.isArray(data.sections)) {
           set(() => ({
             sections: data.sections,
             selectedSectionId:
@@ -134,6 +157,21 @@ export const useSectionsStore = create<SectionsState>()(
         set(() => ({
           selectedSectionId: id,
         }));
+      },
+
+      clearSections: () => {
+        set(() => ({
+          sections: [],
+          selectedSectionId: null,
+        }));
+      },
+
+      getSectionById: (id) => {
+        return get().sections.find((section) => section.id === id);
+      },
+
+      getSectionsByType: (type) => {
+        return get().sections.filter((section) => section.type === type);
       },
     }),
     {

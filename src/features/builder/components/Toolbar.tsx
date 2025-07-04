@@ -1,78 +1,26 @@
 'use client';
 
-import { Download, Upload, Save, Undo, Redo, Settings } from 'lucide-react';
-import {
-  useSectionActions,
-  useSections,
-} from '@/features/sections/hooks/sections-hook';
+import { Undo, Redo, Settings } from 'lucide-react';
+import ProjectManager from './ProjectManager';
+import { Button } from '@/shared/components/ui/button';
 
 const Toolbar = () => {
-  const { exportSite, importSite } = useSectionActions();
-  const sections = useSections();
-
-  const handleImport = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    input.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        try {
-          const json = JSON.parse(event.target?.result as string);
-          importSite(json);
-        } catch (error) {
-          console.error('Failed to import file', error);
-          alert('Failed to import file. Please check the file format.');
-        }
-      };
-      reader.readAsText(file);
-    };
-    input.click();
-  };
-
-  const handleExport = () => {
-    exportSite();
-  };
-
   return (
     <div className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between">
       <div className="flex items-center">
-        <h1 className="text-xl font-semibold mr-6">Mini Website Builder</h1>
-        <div className="flex space-x-2">
-          <button
-            className="p-2 hover:bg-gray-100 rounded-md text-gray-600 flex items-center gap-1"
-            onClick={handleImport}
-          >
-            <Upload size={16} />
-            <span className="text-sm">Import</span>
-          </button>
-          <button
-            className="p-2 hover:bg-gray-100 rounded-md text-gray-600 flex items-center gap-1"
-            onClick={handleExport}
-            disabled={sections.length === 0}
-          >
-            <Download size={16} />
-            <span className="text-sm">Export</span>
-          </button>
-          <button className="p-2 hover:bg-gray-100 rounded-md text-gray-600 flex items-center gap-1">
-            <Save size={16} />
-            <span className="text-sm">Save</span>
-          </button>
-        </div>
+        <h1 className="text-xl font-bold mr-6">Website Builder</h1>
+        <ProjectManager />
       </div>
       <div className="flex items-center space-x-2">
-        <button className="p-2 hover:bg-gray-100 rounded-md text-gray-600">
+        <Button variant="ghost" size="sm" className="p-2" title="Undo">
           <Undo size={16} />
-        </button>
-        <button className="p-2 hover:bg-gray-100 rounded-md text-gray-600">
+        </Button>
+        <Button variant="ghost" size="sm" className="p-2" title="Redo">
           <Redo size={16} />
-        </button>
-        <button className="p-2 hover:bg-gray-100 rounded-md text-gray-600">
+        </Button>
+        <Button variant="ghost" size="sm" className="p-2" title="Settings">
           <Settings size={16} />
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -10,6 +10,11 @@ import {
 import { Plus, X, Edit2 } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { useSectionEditor } from '@/features/builder/hooks/useSectionEditor';
+import { Input } from '@/shared/components/ui/input';
+import { Textarea } from '@/shared/components/ui/textarea';
+import { Label } from '@/shared/components/ui/label';
+import { Button } from '@/shared/components/ui/button';
+import { Card, CardContent } from '@/shared/components/ui/card';
 
 interface FeaturesEditorProps {
   section: Section;
@@ -110,64 +115,63 @@ const FeaturesEditor = ({ section, updateSection }: FeaturesEditorProps) => {
           Features Content
         </h3>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Title
-          </label>
-          <input
+        <div className="space-y-2">
+          <Label htmlFor="title">Title</Label>
+          <Input
+            id="title"
             type="text"
             value={content?.title || ''}
             onChange={(e) => handleChange('title', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Description
-          </label>
-          <textarea
+        <div className="space-y-2">
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            id="description"
             value={content?.description || ''}
             onChange={(e) => handleChange('description', e.target.value)}
             rows={2}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-          ></textarea>
+          />
         </div>
 
         <div className="border-t border-gray-200 pt-4">
-          <h4 className="font-medium text-gray-700 text-sm">Features</h4>
+          <h4 className="font-medium text-gray-700 text-sm mb-3">Features</h4>
 
           <div className="space-y-3">
             {features.map((feature) => (
-              <div
-                key={feature.id}
-                className="flex items-center justify-between bg-gray-50 p-3 rounded-md border border-gray-200"
-              >
-                <div>
-                  <div className="font-medium">{feature.title}</div>
-                  {feature.description && (
-                    <div className="text-sm text-gray-500">
-                      {feature.description}
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => handleEditFeature(feature)}
-                    className="p-1 text-blue-600 hover:text-blue-800"
-                    title="Edit feature"
-                  >
-                    <Edit2 size={16} />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteFeature(feature.id)}
-                    className="p-1 text-red-600 hover:text-red-800"
-                    title="Delete feature"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              </div>
+              <Card key={feature.id}>
+                <CardContent className="p-3 flex items-center justify-between">
+                  <div>
+                    <div className="font-medium">{feature.title}</div>
+                    {feature.description && (
+                      <div className="text-sm text-gray-500">
+                        {feature.description}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      onClick={() => handleEditFeature(feature)}
+                      variant="ghost"
+                      size="sm"
+                      className="p-1 text-blue-600 hover:text-blue-800 h-8 w-8"
+                      title="Edit feature"
+                    >
+                      <Edit2 size={16} />
+                    </Button>
+                    <Button
+                      onClick={() => handleDeleteFeature(feature.id)}
+                      variant="ghost"
+                      size="sm"
+                      className="p-1 text-red-600 hover:text-red-800 h-8 w-8"
+                      title="Delete feature"
+                    >
+                      <X size={16} />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
 
             {features.length === 0 && (
@@ -178,70 +182,63 @@ const FeaturesEditor = ({ section, updateSection }: FeaturesEditorProps) => {
 
         {/* Feature editing */}
         {editingFeature && (
-          <div className="border border-blue-200 bg-blue-50 p-4 rounded-md">
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="font-medium text-blue-800">Edit Feature</h4>
-              <button
-                onClick={() => setEditingFeature(null)}
-                className="p-1 text-gray-500 hover:text-gray-700"
-              >
-                <X size={16} />
-              </button>
-            </div>
-            <div className="space-y-3">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  value={editingFeature.title || ''}
-                  onChange={(e) =>
-                    handleEditingFeatureChange('title', e.target.value)
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description
-                </label>
-                <textarea
-                  value={editingFeature.description || ''}
-                  onChange={(e) =>
-                    handleEditingFeatureChange('description', e.target.value)
-                  }
-                  rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                ></textarea>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Icon (optional)
-                </label>
-                <input
-                  type="text"
-                  value={editingFeature.icon || ''}
-                  onChange={(e) =>
-                    handleEditingFeatureChange('icon', e.target.value)
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Icon name or URL"
-                />
-              </div>
-
-              <div className="pt-2 flex justify-end">
-                <button
-                  onClick={handleUpdateFeature}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          <Card className="bg-blue-50 border-blue-200">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="font-medium text-blue-800">Edit Feature</h4>
+                <Button
+                  onClick={() => setEditingFeature(null)}
+                  variant="ghost"
+                  size="sm"
+                  className="p-1 text-gray-500 hover:text-gray-700 h-8 w-8"
                 >
-                  Update Feature
-                </button>
+                  <X size={16} />
+                </Button>
               </div>
-            </div>
-          </div>
+              <div className="space-y-3">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-title">Title</Label>
+                  <Input
+                    id="edit-title"
+                    type="text"
+                    value={editingFeature.title || ''}
+                    onChange={(e) =>
+                      handleEditingFeatureChange('title', e.target.value)
+                    }
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="edit-description">Description</Label>
+                  <Textarea
+                    id="edit-description"
+                    value={editingFeature.description || ''}
+                    onChange={(e) =>
+                      handleEditingFeatureChange('description', e.target.value)
+                    }
+                    rows={2}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="edit-icon">Icon (optional)</Label>
+                  <Input
+                    id="edit-icon"
+                    type="text"
+                    value={editingFeature.icon || ''}
+                    onChange={(e) =>
+                      handleEditingFeatureChange('icon', e.target.value)
+                    }
+                    placeholder="Icon name or URL"
+                  />
+                </div>
+
+                <div className="pt-2 flex justify-end">
+                  <Button onClick={handleUpdateFeature}>Update Feature</Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* Add new feature */}
@@ -250,63 +247,53 @@ const FeaturesEditor = ({ section, updateSection }: FeaturesEditorProps) => {
             Add New Feature
           </h4>
           <div className="space-y-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Title
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="new-title">Title</Label>
+              <Input
+                id="new-title"
                 type="text"
                 value={newFeature.title || ''}
                 onChange={(e) =>
                   handleNewFeatureChange('title', e.target.value)
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Feature title"
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description
-              </label>
-              <textarea
+            <div className="space-y-2">
+              <Label htmlFor="new-description">Description</Label>
+              <Textarea
+                id="new-description"
                 value={newFeature.description || ''}
                 onChange={(e) =>
                   handleNewFeatureChange('description', e.target.value)
                 }
                 rows={2}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Feature description"
-              ></textarea>
+              />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Icon (optional)
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="new-icon">Icon (optional)</Label>
+              <Input
+                id="new-icon"
                 type="text"
                 value={newFeature.icon || ''}
                 onChange={(e) => handleNewFeatureChange('icon', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Icon name or URL"
               />
             </div>
 
             <div className="pt-2">
-              <button
+              <Button
                 onClick={handleAddFeature}
                 disabled={!newFeature.title}
-                className={`flex items-center px-4 py-2 rounded-md 
-                  ${
-                    newFeature.title
-                      ? 'bg-green-600 text-white hover:bg-green-700'
-                      : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                  }`}
+                className={!newFeature.title ? 'bg-gray-200 text-gray-500' : ''}
+                variant={newFeature.title ? 'default' : 'outline'}
               >
                 <Plus size={16} className="mr-1" />
                 Add Feature
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -314,16 +301,15 @@ const FeaturesEditor = ({ section, updateSection }: FeaturesEditorProps) => {
 
       {/* Save Button */}
       <div className="pt-4 border-t border-gray-200 mt-4">
-        <button
+        <Button
           onClick={saveAndClose}
-          className={`px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-            isSaved
-              ? 'bg-green-600 hover:bg-green-700'
-              : 'bg-blue-600 hover:bg-blue-700'
-          }`}
+          variant={isSaved ? 'outline' : 'default'}
+          className={
+            isSaved ? 'bg-green-600 text-white hover:bg-green-700' : ''
+          }
         >
           {isSaved ? 'Saved ✓' : 'Save Changes'}
-        </button>
+        </Button>
       </div>
     </div>
   );

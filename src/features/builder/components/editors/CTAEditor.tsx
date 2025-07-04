@@ -7,6 +7,11 @@ import {
   SectionContent,
 } from '@/features/sections/types/section';
 import { useSectionEditor } from '@/features/builder/hooks/useSectionEditor';
+import { Input } from '@/shared/components/ui/input';
+import { Textarea } from '@/shared/components/ui/textarea';
+import { Label } from '@/shared/components/ui/label';
+import { Button } from '@/shared/components/ui/button';
+import { Checkbox } from '@/shared/components/ui/checkbox';
 
 interface CTAEditorProps {
   section: Section;
@@ -46,65 +51,55 @@ const CTAEditor = ({ section, updateSection }: CTAEditorProps) => {
           Call to Action Content
         </h3>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Title
-          </label>
-          <input
+        <div className="space-y-2">
+          <Label htmlFor="title">Title</Label>
+          <Input
+            id="title"
             type="text"
             value={content.title || ''}
             onChange={(e) => handleChange('title', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Description
-          </label>
-          <input
-            type="text"
+        <div className="space-y-2">
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            id="description"
             value={content.description || ''}
             onChange={(e) => handleChange('description', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            rows={3}
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Button Text
-            </label>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="buttonText">Button Text</Label>
+            <Input
+              id="buttonText"
               type="text"
               value={content.buttonText || ''}
               onChange={(e) => handleChange('buttonText', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Button Link
-            </label>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="buttonLink">Button Link</Label>
+            <Input
+              id="buttonLink"
               type="text"
               value={content.buttonLink || ''}
               onChange={(e) => handleChange('buttonLink', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Background Image URL
-          </label>
-          <input
+        <div className="space-y-2">
+          <Label htmlFor="backgroundImage">Background Image URL</Label>
+          <Input
+            id="backgroundImage"
             type="text"
             value={content.backgroundImage || ''}
             onChange={(e) => handleChange('backgroundImage', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           />
 
           {content.backgroundImage && (
@@ -122,37 +117,35 @@ const CTAEditor = ({ section, updateSection }: CTAEditorProps) => {
           )}
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Background Overlay
-          </label>
-          <div className="flex items-center">
-            <input
-              type="checkbox"
+        <div className="space-y-2">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="overlay"
               checked={content.overlay !== false}
-              onChange={(e) =>
-                handleChange('overlay', e.target.checked ? 'true' : 'false')
+              onCheckedChange={(checked) =>
+                handleChange('overlay', checked ? 'true' : 'false')
               }
-              className="mr-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
-            <span className="text-sm text-gray-500">
+            <Label
+              htmlFor="overlay"
+              className="text-sm text-gray-500 font-normal"
+            >
               Enable dark overlay on background
-            </span>
+            </Label>
           </div>
         </div>
       </div>
 
       <div className="pt-4 border-t border-gray-200">
-        <button
+        <Button
           onClick={saveAndClose}
-          className={`px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-            isSaved
-              ? 'bg-green-600 hover:bg-green-700'
-              : 'bg-blue-600 hover:bg-blue-700'
-          }`}
+          variant={isSaved ? 'outline' : 'default'}
+          className={
+            isSaved ? 'bg-green-600 text-white hover:bg-green-700' : ''
+          }
         >
           {isSaved ? 'Saved ✓' : 'Save Changes'}
-        </button>
+        </Button>
       </div>
     </div>
   );

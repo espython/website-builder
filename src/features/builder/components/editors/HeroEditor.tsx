@@ -6,6 +6,10 @@ import {
   SectionContent,
 } from '@/features/sections/types/section';
 import { useSectionEditor } from '@/features/builder/hooks/useSectionEditor';
+import { Input } from '@/shared/components/ui/input';
+import { Textarea } from '@/shared/components/ui/textarea';
+import { Label } from '@/shared/components/ui/label';
+import { Button } from '@/shared/components/ui/button';
 
 interface HeroEditorProps {
   section: Section;
@@ -24,65 +28,55 @@ const HeroEditor = ({ section, updateSection }: HeroEditorProps) => {
           Hero Content
         </h3>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Title
-          </label>
-          <input
+        <div className="space-y-2">
+          <Label htmlFor="title">Title</Label>
+          <Input
+            id="title"
             type="text"
             value={content.title || ''}
             onChange={(e) => handleChange('title', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Description
-          </label>
-          <textarea
+        <div className="space-y-2">
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            id="description"
             value={content.description || ''}
             onChange={(e) => handleChange('description', e.target.value)}
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-          ></textarea>
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Button Text
-            </label>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="buttonText">Button Text</Label>
+            <Input
+              id="buttonText"
               type="text"
               value={content.buttonText || ''}
               onChange={(e) => handleChange('buttonText', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Button Link
-            </label>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="buttonLink">Button Link</Label>
+            <Input
+              id="buttonLink"
               type="text"
               value={content.buttonLink || ''}
               onChange={(e) => handleChange('buttonLink', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Background Image URL
-          </label>
-          <input
+        <div className="space-y-2">
+          <Label htmlFor="backgroundImage">Background Image URL</Label>
+          <Input
+            id="backgroundImage"
             type="text"
             value={content.backgroundImage || ''}
             onChange={(e) => handleChange('backgroundImage', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           />
 
           {content.backgroundImage && (
@@ -100,39 +94,42 @@ const HeroEditor = ({ section, updateSection }: HeroEditorProps) => {
           )}
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Alignment
-          </label>
+        <div className="space-y-2">
+          <Label>Alignment</Label>
           <div className="flex space-x-4">
             {['left', 'center', 'right'].map((alignment) => (
-              <label key={alignment} className="flex items-center">
+              <div key={alignment} className="flex items-center space-x-2">
                 <input
                   type="radio"
+                  id={`alignment-${alignment}`}
                   name="alignment"
                   value={alignment}
                   checked={content.alignment === alignment}
                   onChange={() => handleChange('alignment', alignment)}
-                  className="mr-2"
+                  className="text-slate-900 focus:ring-slate-900"
                 />
-                <span className="text-sm capitalize">{alignment}</span>
-              </label>
+                <Label
+                  htmlFor={`alignment-${alignment}`}
+                  className="capitalize"
+                >
+                  {alignment}
+                </Label>
+              </div>
             ))}
           </div>
         </div>
       </div>
 
       <div className="pt-4 border-t border-gray-200">
-        <button
+        <Button
           onClick={saveAndClose}
-          className={`px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-            isSaved
-              ? 'bg-green-600 hover:bg-green-700'
-              : 'bg-blue-600 hover:bg-blue-700'
-          }`}
+          variant={isSaved ? 'outline' : 'default'}
+          className={
+            isSaved ? 'bg-green-600 text-white hover:bg-green-700' : ''
+          }
         >
           {isSaved ? 'Saved ✓' : 'Save Changes'}
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -13,12 +13,19 @@ import {
   Link,
   ChevronDown,
   ChevronRight,
+  ArrowUp,
+  ArrowDown,
 } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import {
   SectionFieldValue,
   useSectionEditor,
 } from '@/features/builder/hooks/useSectionEditor';
+import { Input } from '@/shared/components/ui/input';
+import { Label } from '@/shared/components/ui/label';
+import { Button } from '@/shared/components/ui/button';
+import { Checkbox } from '@/shared/components/ui/checkbox';
+import { Card, CardContent } from '@/shared/components/ui/card';
 
 interface HeaderEditorProps {
   section: Section;
@@ -165,18 +172,16 @@ const HeaderEditor = ({ section, updateSection }: HeaderEditorProps) => {
         {/* Logo */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <label className="block text-sm font-medium text-gray-700">
-              Logo URL
-            </label>
+            <Label htmlFor="logo-url">Logo URL</Label>
           </div>
           <div className="flex space-x-4 items-start">
             <div className="w-full">
-              <input
+              <Input
+                id="logo-url"
                 type="text"
                 value={content.logo || ''}
                 onChange={(e) => handleChange('logo', e.target.value)}
                 placeholder="Enter logo URL or leave blank for text logo"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             {content.logo && (
@@ -198,50 +203,48 @@ const HeaderEditor = ({ section, updateSection }: HeaderEditorProps) => {
         {/* Contact Button */}
         <div className="space-y-4 border-t border-gray-100 pt-4">
           <div className="flex items-center justify-between">
-            <label className="block text-sm font-medium text-gray-700">
-              Contact Button
-            </label>
+            <Label htmlFor="contact-button">Contact Button</Label>
             <div className="ml-2 flex items-center">
-              <input
-                type="checkbox"
-                checked={content.showContactButton || false}
-                onChange={toggleContactButton}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <span className="ml-2 text-sm text-gray-500">
-                Show contact button
-              </span>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="contact-button"
+                  checked={content.showContactButton || false}
+                  onCheckedChange={toggleContactButton}
+                />
+                <Label
+                  htmlFor="contact-button"
+                  className="text-sm text-gray-500"
+                >
+                  Show contact button
+                </Label>
+              </div>
             </div>
           </div>
 
           {content.showContactButton && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Button Text
-                </label>
-                <input
+              <div className="space-y-2">
+                <Label htmlFor="button-text">Button Text</Label>
+                <Input
+                  id="button-text"
                   type="text"
                   value={content.contactButtonText || ''}
                   onChange={(e) =>
                     handleChange('contactButtonText', e.target.value)
                   }
                   placeholder="Contact Us"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Button Link
-                </label>
-                <input
+              <div className="space-y-2">
+                <Label htmlFor="button-link">Button Link</Label>
+                <Input
+                  id="button-link"
                   type="text"
                   value={content.contactButtonLink || ''}
                   onChange={(e) =>
                     handleChange('contactButtonLink', e.target.value)
                   }
                   placeholder="#contact"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
             </div>
@@ -251,214 +254,214 @@ const HeaderEditor = ({ section, updateSection }: HeaderEditorProps) => {
         {/* Menu Items */}
         <div className="border-t border-gray-100 pt-4">
           <div className="flex justify-between items-center mb-3">
-            <label className="block text-sm font-medium text-gray-700">
-              Menu Items
-            </label>
-            <button
+            <Label>Menu Items</Label>
+            <Button
               type="button"
               onClick={addMenuItem}
-              className="px-2 py-1 text-xs bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              size="sm"
+              className="h-8 text-xs"
             >
-              <Plus size={14} className="inline mr-1" />
+              <Plus size={14} className="mr-1" />
               Add Item
-            </button>
+            </Button>
           </div>
 
           {content.menuItems.length === 0 ? (
-            <div className="text-center py-6 border-2 border-dashed border-gray-300 rounded-md">
-              <div className="flex flex-col items-center">
+            <Card className="border-2 border-dashed">
+              <CardContent className="p-6 flex flex-col items-center justify-center">
                 <div className="bg-gray-100 rounded-full p-3 mb-2">
                   <Link size={24} className="text-gray-400" />
                 </div>
                 <p className="text-gray-500 mb-2">No menu items added yet</p>
-                <button
-                  type="button"
-                  onClick={addMenuItem}
-                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                >
+                <Button onClick={addMenuItem} className="mt-2" size="sm">
                   Add First Item
-                </button>
-              </div>
-            </div>
+                </Button>
+              </CardContent>
+            </Card>
           ) : (
             <div className="space-y-4">
               {content.menuItems.map((item, index) => (
-                <div
-                  key={item.id}
-                  className="border border-gray-200 rounded-md p-4"
-                >
-                  {/* Main menu item */}
-                  <div className="mb-3">
-                    <div className="flex justify-between items-center mb-3">
-                      <div className="flex items-center">
-                        <GripVertical
-                          size={16}
-                          className="text-gray-400 mr-2"
-                        />
-                        <span className="text-sm font-medium">
-                          Menu Item {index + 1}
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <button
-                          type="button"
-                          onClick={() => moveMenuItemUp(index)}
-                          disabled={index === 0}
-                          className={`p-1 ${
-                            index === 0
-                              ? 'text-gray-300 cursor-not-allowed'
-                              : 'text-gray-500 hover:text-gray-700'
-                          }`}
-                          title="Move up"
-                        >
-                          ↑
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => moveMenuItemDown(index)}
-                          disabled={index === content.menuItems.length - 1}
-                          className={`p-1 ${
-                            index === content.menuItems.length - 1
-                              ? 'text-gray-300 cursor-not-allowed'
-                              : 'text-gray-500 hover:text-gray-700'
-                          }`}
-                          title="Move down"
-                        >
-                          ↓
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => addSubmenuItem(index)}
-                          className="p-1 text-gray-400 hover:text-blue-500"
-                          title="Add submenu item"
-                        >
-                          <ChevronDown size={16} />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => removeMenuItem(index)}
-                          className="p-1 text-gray-400 hover:text-red-500"
-                          title="Remove item"
-                        >
-                          <Trash size={16} />
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Label
-                        </label>
-                        <input
-                          type="text"
-                          value={item.label}
-                          onChange={(e) =>
-                            updateMenuItem(index, 'label', e.target.value)
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Link
-                        </label>
-                        <input
-                          type="text"
-                          value={item.link}
-                          onChange={(e) =>
-                            updateMenuItem(index, 'link', e.target.value)
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Submenu items */}
-                  {item.children && item.children.length > 0 && (
-                    <div className="ml-6 border-l-2 border-gray-200 pl-4 space-y-3">
-                      <div className="text-xs font-medium text-gray-500 mb-2">
-                        Submenu Items
-                      </div>
-                      {item.children.map((child, childIndex) => (
-                        <div
-                          key={child.id}
-                          className="border border-gray-100 rounded-md p-3 bg-gray-50"
-                        >
-                          <div className="flex justify-between items-center mb-2">
-                            <div className="flex items-center">
-                              <ChevronRight
-                                size={14}
-                                className="text-gray-400 mr-1"
-                              />
-                              <span className="text-xs font-medium">
-                                Submenu {childIndex + 1}
-                              </span>
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                removeSubmenuItem(index, childIndex)
-                              }
-                              className="p-1 text-gray-400 hover:text-red-500"
-                              title="Remove submenu item"
-                            >
-                              <Trash size={14} />
-                            </button>
-                          </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">
-                                Label
-                              </label>
-                              <input
-                                type="text"
-                                value={child.label}
-                                onChange={(e) =>
-                                  updateSubmenuItem(
-                                    index,
-                                    childIndex,
-                                    'label',
-                                    e.target.value
-                                  )
-                                }
-                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">
-                                Link
-                              </label>
-                              <input
-                                type="text"
-                                value={child.link}
-                                onChange={(e) =>
-                                  updateSubmenuItem(
-                                    index,
-                                    childIndex,
-                                    'link',
-                                    e.target.value
-                                  )
-                                }
-                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md"
-                              />
-                            </div>
-                          </div>
+                <Card key={item.id}>
+                  <CardContent className="p-4">
+                    {/* Main menu item */}
+                    <div className="mb-3">
+                      <div className="flex justify-between items-center mb-3">
+                        <div className="flex items-center">
+                          <GripVertical
+                            size={16}
+                            className="text-gray-400 mr-2"
+                          />
+                          <span className="text-sm font-medium">
+                            Menu Item {index + 1}
+                          </span>
                         </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => addSubmenuItem(index)}
-                        className="mt-2 px-2 py-1 text-xs text-blue-600 hover:text-blue-800"
-                      >
-                        <Plus size={12} className="inline mr-1" />
-                        Add Submenu Item
-                      </button>
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            type="button"
+                            onClick={() => moveMenuItemUp(index)}
+                            disabled={index === 0}
+                            variant="ghost"
+                            size="sm"
+                            className={`p-1 h-8 w-8 ${index === 0 ? 'opacity-50' : ''}`}
+                            title="Move up"
+                          >
+                            <ArrowUp size={14} />
+                          </Button>
+                          <Button
+                            type="button"
+                            onClick={() => moveMenuItemDown(index)}
+                            disabled={index === content.menuItems.length - 1}
+                            variant="ghost"
+                            size="sm"
+                            className={`p-1 h-8 w-8 ${index === content.menuItems.length - 1 ? 'opacity-50' : ''}`}
+                            title="Move down"
+                          >
+                            <ArrowDown size={14} />
+                          </Button>
+                          <Button
+                            type="button"
+                            onClick={() => addSubmenuItem(index)}
+                            variant="ghost"
+                            size="sm"
+                            className="p-1 text-gray-400 hover:text-blue-500 h-8 w-8"
+                            title="Add submenu item"
+                          >
+                            <ChevronDown size={16} />
+                          </Button>
+                          <Button
+                            type="button"
+                            onClick={() => removeMenuItem(index)}
+                            variant="ghost"
+                            size="sm"
+                            className="p-1 text-gray-400 hover:text-red-500 h-8 w-8"
+                            title="Remove item"
+                          >
+                            <Trash size={16} />
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor={`menu-label-${index}`}>Label</Label>
+                          <Input
+                            id={`menu-label-${index}`}
+                            type="text"
+                            value={item.label}
+                            onChange={(e) =>
+                              updateMenuItem(index, 'label', e.target.value)
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`menu-link-${index}`}>Link</Label>
+                          <Input
+                            id={`menu-link-${index}`}
+                            type="text"
+                            value={item.link}
+                            onChange={(e) =>
+                              updateMenuItem(index, 'link', e.target.value)
+                            }
+                          />
+                        </div>
+                      </div>
                     </div>
-                  )}
-                </div>
+
+                    {/* Submenu items */}
+                    {item.children && item.children.length > 0 && (
+                      <div className="ml-6 border-l-2 border-gray-200 pl-4 space-y-3">
+                        <div className="text-xs font-medium text-gray-500 mb-2">
+                          Submenu Items
+                        </div>
+                        {item.children.map((child, childIndex) => (
+                          <Card key={child.id} className="bg-gray-50">
+                            <CardContent className="p-3">
+                              <div className="flex justify-between items-center mb-2">
+                                <div className="flex items-center">
+                                  <ChevronRight
+                                    size={14}
+                                    className="text-gray-400 mr-1"
+                                  />
+                                  <span className="text-xs font-medium">
+                                    Submenu {childIndex + 1}
+                                  </span>
+                                </div>
+                                <Button
+                                  type="button"
+                                  onClick={() =>
+                                    removeSubmenuItem(index, childIndex)
+                                  }
+                                  variant="ghost"
+                                  size="sm"
+                                  className="p-1 text-gray-400 hover:text-red-500 h-7 w-7"
+                                  title="Remove submenu item"
+                                >
+                                  <Trash size={14} />
+                                </Button>
+                              </div>
+
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                  <Label
+                                    htmlFor={`submenu-label-${index}-${childIndex}`}
+                                    className="text-xs"
+                                  >
+                                    Label
+                                  </Label>
+                                  <Input
+                                    id={`submenu-label-${index}-${childIndex}`}
+                                    type="text"
+                                    value={child.label}
+                                    onChange={(e) =>
+                                      updateSubmenuItem(
+                                        index,
+                                        childIndex,
+                                        'label',
+                                        e.target.value
+                                      )
+                                    }
+                                    className="h-8 text-sm"
+                                  />
+                                </div>
+                                <div className="space-y-1">
+                                  <Label
+                                    htmlFor={`submenu-link-${index}-${childIndex}`}
+                                    className="text-xs"
+                                  >
+                                    Link
+                                  </Label>
+                                  <Input
+                                    id={`submenu-link-${index}-${childIndex}`}
+                                    type="text"
+                                    value={child.link}
+                                    onChange={(e) =>
+                                      updateSubmenuItem(
+                                        index,
+                                        childIndex,
+                                        'link',
+                                        e.target.value
+                                      )
+                                    }
+                                    className="h-8 text-sm"
+                                  />
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                        <Button
+                          variant="link"
+                          size="sm"
+                          onClick={() => addSubmenuItem(index)}
+                          className="text-xs px-0 h-6"
+                        >
+                          <Plus size={12} className="mr-1" />
+                          Add Submenu Item
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
               ))}
             </div>
           )}
@@ -466,16 +469,15 @@ const HeaderEditor = ({ section, updateSection }: HeaderEditorProps) => {
       </div>
 
       <div className="pt-4 border-t border-gray-200 sticky bottom-0 bg-white pb-4">
-        <button
+        <Button
           onClick={saveAndClose}
-          className={`px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-            isSaved
-              ? 'bg-green-600 hover:bg-green-700'
-              : 'bg-blue-600 hover:bg-blue-700'
-          }`}
+          variant={isSaved ? 'outline' : 'default'}
+          className={
+            isSaved ? 'bg-green-600 text-white hover:bg-green-700' : ''
+          }
         >
           {isSaved ? 'Saved ✓' : 'Save Changes'}
-        </button>
+        </Button>
       </div>
     </div>
   );

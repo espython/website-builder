@@ -10,6 +10,11 @@ import {
 } from '@/features/sections/types/section';
 import { Trash, Plus, GripVertical } from 'lucide-react';
 import { useSectionEditor } from '@/features/builder/hooks/useSectionEditor';
+import { Input } from '@/shared/components/ui/input';
+import { Textarea } from '@/shared/components/ui/textarea';
+import { Label } from '@/shared/components/ui/label';
+import { Button } from '@/shared/components/ui/button';
+import { Card, CardContent } from '@/shared/components/ui/card';
 
 interface FooterEditorProps {
   section: Section;
@@ -139,7 +144,7 @@ const FooterEditor = ({ section, updateSection }: FooterEditorProps) => {
     updatedLinks.splice(linkIndex, 1);
     updatedGroups[groupIndex] = {
       ...updatedGroups[groupIndex],
-      links: updatedLinks as FooterLink[],
+      links: updatedLinks,
     };
     handleChange('linkGroups', updatedGroups);
   };
@@ -161,244 +166,258 @@ const FooterEditor = ({ section, updateSection }: FooterEditorProps) => {
         </h3>
 
         {/* Logo Section */}
-        <div className="p-4 border border-gray-200 rounded-md bg-gray-50">
-          <h4 className="font-medium text-gray-700 mb-3">Logo</h4>
-          <div className="space-y-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Logo Text
-              </label>
-              <input
-                type="text"
-                value={content.logo?.text || ''}
-                onChange={(e) => handleLogoChange('text', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-              />
+        <Card className="bg-gray-50">
+          <CardContent className="p-4 space-y-3">
+            <h4 className="font-medium text-gray-700 mb-3">Logo</h4>
+            <div className="space-y-3">
+              <div className="space-y-2">
+                <Label htmlFor="logo-text">Logo Text</Label>
+                <Input
+                  id="logo-text"
+                  type="text"
+                  value={content.logo?.text || ''}
+                  onChange={(e) => handleLogoChange('text', e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="logo-image">Logo Image URL</Label>
+                <Input
+                  id="logo-image"
+                  type="text"
+                  value={content.logo?.image || ''}
+                  onChange={(e) => handleLogoChange('image', e.target.value)}
+                />
+                {content.logo?.image && (
+                  <div className="mt-2">
+                    <img
+                      src={content.logo.image}
+                      alt="Logo preview"
+                      className="h-8 object-contain"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          'https://via.placeholder.com/120x40?text=Logo';
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Logo Image URL
-              </label>
-              <input
-                type="text"
-                value={content.logo?.image || ''}
-                onChange={(e) => handleLogoChange('image', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-              />
-              {content.logo?.image && (
-                <div className="mt-2">
-                  <img
-                    src={content.logo.image}
-                    alt="Logo preview"
-                    className="h-8 object-contain"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        'https://via.placeholder.com/120x40?text=Logo';
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Description */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Description
-          </label>
-          <textarea
+        <div className="space-y-2">
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            id="description"
             value={content.description || ''}
             onChange={(e) => handleChange('description', e.target.value)}
             rows={2}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-          ></textarea>
+          />
         </div>
 
         {/* Copyright */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Copyright Text
-          </label>
-          <input
+        <div className="space-y-2">
+          <Label htmlFor="copyright">Copyright Text</Label>
+          <Input
+            id="copyright"
             type="text"
             value={
               content.copyright ||
-              `© ${new Date().getFullYear()} Your Company. All rights reserved.`
+              ` ${new Date().getFullYear()} Your Company. All rights reserved.`
             }
             onChange={(e) => handleChange('copyright', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
         {/* Link Groups Section */}
-        <div className="p-4 border border-gray-200 rounded-md">
-          <div className="flex justify-between items-center mb-3">
-            <h4 className="font-medium text-gray-700">Link Groups</h4>
-            <button
-              type="button"
-              onClick={addLinkGroup}
-              className="px-2 py-1 text-xs bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              <Plus size={14} className="inline mr-1" />
-              Add Group
-            </button>
-          </div>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex justify-between items-center mb-3">
+              <h4 className="font-medium text-gray-700">Link Groups</h4>
+              <Button
+                size="sm"
+                variant="default"
+                onClick={addLinkGroup}
+                className="text-xs h-8"
+              >
+                <Plus size={14} className="mr-1" />
+                Add Group
+              </Button>
+            </div>
 
-          {(content.linkGroups || []).map((group, groupIndex) => (
-            <div
-              key={groupIndex}
-              className="mb-4 p-3 border border-gray-200 rounded-md bg-white"
-            >
-              <div className="flex justify-between items-center mb-2">
-                <div className="flex items-center">
-                  <GripVertical size={16} className="text-gray-400 mr-2" />
-                  <input
-                    type="text"
-                    value={group.title}
-                    onChange={(e) =>
-                      handleLinkGroupChange(groupIndex, 'title', e.target.value)
-                    }
-                    className="px-2 py-1 border border-gray-300 rounded-md text-sm"
-                    placeholder="Group Title"
-                  />
+            <div className="space-y-4">
+              {(content.linkGroups || []).map((group, groupIndex) => (
+                <Card key={groupIndex} className="mb-4">
+                  <CardContent className="p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center">
+                        <GripVertical
+                          size={16}
+                          className="text-gray-400 mr-2"
+                        />
+                        <Input
+                          value={group.title}
+                          onChange={(e) =>
+                            handleLinkGroupChange(
+                              groupIndex,
+                              'title',
+                              e.target.value
+                            )
+                          }
+                          className="text-sm h-8"
+                          placeholder="Group Title"
+                        />
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeLinkGroup(groupIndex)}
+                        className="p-1 text-gray-400 hover:text-red-500 h-8 w-8"
+                      >
+                        <Trash size={14} />
+                      </Button>
+                    </div>
+
+                    {/* Links in this group */}
+                    <div className="space-y-2 pl-6">
+                      {group.links.map((link, linkIndex) => (
+                        <div
+                          key={linkIndex}
+                          className="flex items-center space-x-2"
+                        >
+                          <Input
+                            value={link.label}
+                            onChange={(e) =>
+                              handleLinkChange(
+                                groupIndex,
+                                linkIndex,
+                                'label',
+                                e.target.value
+                              )
+                            }
+                            className="flex-1 text-sm h-8"
+                            placeholder="Link Label"
+                          />
+                          <Input
+                            value={link.link}
+                            onChange={(e) =>
+                              handleLinkChange(
+                                groupIndex,
+                                linkIndex,
+                                'link',
+                                e.target.value
+                              )
+                            }
+                            className="flex-1 text-sm h-8"
+                            placeholder="URL"
+                          />
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeLink(groupIndex, linkIndex)}
+                            className="p-1 text-gray-400 hover:text-red-500 h-8 w-8"
+                          >
+                            <Trash size={14} />
+                          </Button>
+                        </div>
+                      ))}
+                      <Button
+                        variant="link"
+                        size="sm"
+                        onClick={() => addLink(groupIndex)}
+                        className="text-xs px-0 h-6"
+                      >
+                        <Plus size={14} className="mr-1" />
+                        Add Link
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+
+              {(content.linkGroups || []).length === 0 && (
+                <div className="text-center py-4 text-sm text-gray-500">
+                  No link groups added. Click &quot;Add Group&quot; to create
+                  one.
                 </div>
-                <button
-                  type="button"
-                  onClick={() => removeLinkGroup(groupIndex)}
-                  className="p-1 text-gray-400 hover:text-red-500"
-                >
-                  <Trash size={14} />
-                </button>
-              </div>
-
-              {/* Links in this group */}
-              <div className="space-y-2 pl-6">
-                {group.links.map((link, linkIndex) => (
-                  <div key={linkIndex} className="flex items-center space-x-2">
-                    <input
-                      type="text"
-                      value={link.label}
-                      onChange={(e) =>
-                        handleLinkChange(
-                          groupIndex,
-                          linkIndex,
-                          'label',
-                          e.target.value
-                        )
-                      }
-                      className="flex-1 px-2 py-1 border border-gray-300 rounded-md text-sm"
-                      placeholder="Link Label"
-                    />
-                    <input
-                      type="text"
-                      value={link.link}
-                      onChange={(e) =>
-                        handleLinkChange(
-                          groupIndex,
-                          linkIndex,
-                          'link',
-                          e.target.value
-                        )
-                      }
-                      className="flex-1 px-2 py-1 border border-gray-300 rounded-md text-sm"
-                      placeholder="URL"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeLink(groupIndex, linkIndex)}
-                      className="p-1 text-gray-400 hover:text-red-500"
-                    >
-                      <Trash size={14} />
-                    </button>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => addLink(groupIndex)}
-                  className="text-xs text-blue-600 hover:text-blue-800"
-                >
-                  <Plus size={14} className="inline mr-1" />
-                  Add Link
-                </button>
-              </div>
+              )}
             </div>
-          ))}
-
-          {(content.linkGroups || []).length === 0 && (
-            <div className="text-center py-4 text-sm text-gray-500">
-              No link groups added. Click &quot;Add Group&quot; to create one.
-            </div>
-          )}
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Social Links */}
-        <div className="p-4 border border-gray-200 rounded-md">
-          <div className="flex justify-between items-center mb-3">
-            <h4 className="font-medium text-gray-700">Social Links</h4>
-            <button
-              type="button"
-              onClick={addSocialLink}
-              className="px-2 py-1 text-xs bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              <Plus size={14} className="inline mr-1" />
-              Add Social
-            </button>
-          </div>
-
-          {(content.socialLinks || []).map((link, index) => (
-            <div key={index} className="flex mb-2 items-center">
-              <div className="flex-1 mr-2">
-                <input
-                  type="text"
-                  value={link.label}
-                  placeholder="Platform (e.g. Twitter)"
-                  onChange={(e) =>
-                    handleSocialLinkChange(index, 'label', e.target.value)
-                  }
-                  className="w-full px-2 py-1 border border-gray-300 rounded-md text-sm"
-                />
-              </div>
-              <div className="flex-[2] mr-2">
-                <input
-                  type="url"
-                  value={link.link}
-                  placeholder="URL (e.g. https://twitter.com)"
-                  onChange={(e) =>
-                    handleSocialLinkChange(index, 'link', e.target.value)
-                  }
-                  className="w-full px-2 py-1 border border-gray-300 rounded-md text-sm"
-                />
-              </div>
-              <button
-                type="button"
-                onClick={() => removeSocialLink(index)}
-                className="p-1 text-gray-400 hover:text-red-500"
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex justify-between items-center mb-3">
+              <h4 className="font-medium text-gray-700">Social Links</h4>
+              <Button
+                size="sm"
+                variant="default"
+                onClick={addSocialLink}
+                className="text-xs h-8"
               >
-                <Trash size={14} />
-              </button>
+                <Plus size={14} className="mr-1" />
+                Add Social
+              </Button>
             </div>
-          ))}
 
-          {(content.socialLinks || []).length === 0 && (
-            <div className="text-center py-2 text-sm text-gray-500">
-              No social links added.
+            <div className="space-y-3">
+              {(content.socialLinks || []).map((link, index) => (
+                <div key={index} className="flex mb-2 items-center space-x-2">
+                  <div className="flex-1">
+                    <Input
+                      type="text"
+                      value={link.label}
+                      placeholder="Platform (e.g. Twitter)"
+                      onChange={(e) =>
+                        handleSocialLinkChange(index, 'label', e.target.value)
+                      }
+                      className="text-sm h-9"
+                    />
+                  </div>
+                  <div className="flex-[2]">
+                    <Input
+                      type="url"
+                      value={link.link}
+                      placeholder="URL (e.g. https://twitter.com)"
+                      onChange={(e) =>
+                        handleSocialLinkChange(index, 'link', e.target.value)
+                      }
+                      className="text-sm h-9"
+                    />
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeSocialLink(index)}
+                    className="p-1 text-gray-400 hover:text-red-500 h-8 w-8"
+                  >
+                    <Trash size={14} />
+                  </Button>
+                </div>
+              ))}
+
+              {(content.socialLinks || []).length === 0 && (
+                <div className="text-center py-2 text-sm text-gray-500">
+                  No social links added.
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="pt-4 border-t border-gray-200 sticky bottom-0 bg-white pb-4">
-        <button
+        <Button
           onClick={saveAndClose}
-          className={`px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-            isSaved
-              ? 'bg-green-600 hover:bg-green-700'
-              : 'bg-blue-600 hover:bg-blue-700'
-          }`}
+          variant={isSaved ? 'outline' : 'default'}
+          className={
+            isSaved ? 'bg-green-600 text-white hover:bg-green-700' : ''
+          }
         >
-          {isSaved ? 'Saved ✓' : 'Save Changes'}
-        </button>
+          {isSaved ? 'Saved ' : 'Save Changes'}
+        </Button>
       </div>
     </div>
   );

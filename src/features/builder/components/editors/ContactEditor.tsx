@@ -9,6 +9,11 @@ import {
 } from '@/features/sections/types/section';
 import { Trash } from 'lucide-react';
 import { useSectionEditor } from '@/features/builder/hooks/useSectionEditor';
+import { Input } from '@/shared/components/ui/input';
+import { Textarea } from '@/shared/components/ui/textarea';
+import { Label } from '@/shared/components/ui/label';
+import { Button } from '@/shared/components/ui/button';
+import { Checkbox } from '@/shared/components/ui/checkbox';
 
 interface ContactEditorProps {
   section: Section;
@@ -50,7 +55,7 @@ const ContactEditor = ({ section, updateSection }: ContactEditorProps) => {
   const addSocialLink = () => {
     const updatedLinks = [
       ...(content.socialLinks || []),
-      { name: '', url: '' },
+      { label: '', link: '' },
     ];
     handleChange('socialLinks', updatedLinks as FooterLink[]);
   };
@@ -78,155 +83,142 @@ const ContactEditor = ({ section, updateSection }: ContactEditorProps) => {
           Contact Information
         </h3>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Title
-          </label>
-          <input
+        <div className="space-y-2">
+          <Label htmlFor="title">Title</Label>
+          <Input
+            id="title"
             type="text"
             value={content.title || ''}
             onChange={(e) => handleChange('title', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Description
-          </label>
-          <textarea
+        <div className="space-y-2">
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            id="description"
             value={content.description || ''}
             onChange={(e) => handleChange('description', e.target.value)}
             rows={2}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-          ></textarea>
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
               type="email"
               value={content.email || ''}
               onChange={(e) => handleChange('email', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Phone
-            </label>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone</Label>
+            <Input
+              id="phone"
               type="tel"
               value={content.phone || ''}
               onChange={(e) => handleChange('phone', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Address
-          </label>
-          <input
+        <div className="space-y-2">
+          <Label htmlFor="address">Address</Label>
+          <Input
+            id="address"
             type="text"
             value={content.address || ''}
             onChange={(e) => handleChange('address', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Map URL (Google Maps embed URL)
-          </label>
-          <input
+        <div className="space-y-2">
+          <Label htmlFor="mapUrl">Map URL (Google Maps embed URL)</Label>
+          <Input
+            id="mapUrl"
             type="url"
             value={content.mapUrl || ''}
             onChange={(e) => handleChange('mapUrl', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
-        <div className="mt-4">
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={content.showForm === true}
-              onChange={(e) => handleChange('showForm', e.target.checked)}
-              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-            />
-            <span className="ml-2 text-sm text-gray-700">
-              Show contact form
-            </span>
-          </label>
+        <div className="mt-4 flex items-center space-x-2">
+          <Checkbox
+            id="showForm"
+            checked={content.showForm === true}
+            onCheckedChange={(checked) => handleChange('showForm', !!checked)}
+          />
+          <Label
+            htmlFor="showForm"
+            className="text-sm text-gray-700 font-normal"
+          >
+            Show contact form
+          </Label>
         </div>
 
         <div className="pt-4 border-t border-gray-200">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Social Links
-          </label>
+          <Label className="block mb-2">Social Links</Label>
 
           {(content.socialLinks || []).map((link, index) => (
             <div key={index} className="flex mb-3 items-center">
               <div className="flex-1 mr-2">
-                <input
+                <Input
                   type="text"
                   value={link.label}
                   placeholder="Platform (e.g. Twitter)"
                   onChange={(e) =>
                     handleSocialLinkChange(index, 'label', e.target.value)
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
               <div className="flex-[2] mr-2">
-                <input
+                <Input
                   type="url"
                   value={link.link}
                   placeholder="URL (e.g. https://twitter.com/yourusername)"
                   onChange={(e) =>
                     handleSocialLinkChange(index, 'link', e.target.value)
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="sm"
                 onClick={() => removeSocialLink(index)}
                 className="p-2 text-gray-400 hover:text-red-500"
                 aria-label="Remove social link"
               >
                 <Trash size={16} />
-              </button>
+              </Button>
             </div>
           ))}
 
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={addSocialLink}
-            className="mt-2 px-3 py-1 text-sm text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50"
+            className="mt-2 text-blue-600 border-blue-300 hover:bg-blue-50"
           >
             + Add Social Link
-          </button>
+          </Button>
         </div>
       </div>
 
       <div className="pt-4 border-t border-gray-200">
-        <button
+        <Button
           onClick={saveAndClose}
-          className={`px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-            isSaved
-              ? 'bg-green-600 hover:bg-green-700'
-              : 'bg-blue-600 hover:bg-blue-700'
-          }`}
+          variant={isSaved ? 'outline' : 'default'}
+          className={
+            isSaved ? 'bg-green-600 text-white hover:bg-green-700' : ''
+          }
         >
           {isSaved ? 'Saved ✓' : 'Save Changes'}
-        </button>
+        </Button>
       </div>
     </div>
   );
