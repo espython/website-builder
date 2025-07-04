@@ -133,6 +133,7 @@ export interface CTAContent {
   buttonText: string;
   buttonLink?: string;
   backgroundImage?: string;
+  overlay?: boolean;
 }
 
 // Header section

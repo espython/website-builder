@@ -32,6 +32,7 @@ import GallerySection from '@/features/sections/components/GallerySection';
 import CtaSection from '@/features/sections/components/CtaSection';
 import HeaderSection from '@/features/sections/components/HeaderSection';
 import FooterSection from '@/features/sections/components/FooterSection';
+import AddSectionButton from '@/features/sections/components/AddSectionButton';
 
 // Import icons
 import { Smartphone, Tablet, Monitor, ArrowDownUp, Eye } from 'lucide-react';
@@ -236,12 +237,7 @@ const PreviewArea = () => {
                 <p className="text-gray-500 mb-4">
                   Get started by adding sections from the editor panel.
                 </p>
-                <button
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                  // This button could trigger some action like showing a section template library
-                >
-                  Add your first section
-                </button>
+                <AddSectionButton />
               </div>
             </div>
           )}
