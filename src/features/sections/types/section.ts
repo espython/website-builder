@@ -167,7 +167,7 @@ export interface FooterLinkGroup {
 }
 
 export interface FooterContent {
-  logo?: {
+  logo: {
     text: string;
     image?: string;
   };

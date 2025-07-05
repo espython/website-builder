@@ -78,10 +78,10 @@ const FooterSection = ({
             <div
               className={`${previewMode === 'mobile' ? 'mb-2' : 'mb-3 sm:mb-4'}`}
             >
-              {content.logo?.image ? (
+              {content.logo.image ? (
                 <div className="flex items-center">
                   <img
-                    src={content.logo?.image}
+                    src={content.logo.image}
                     alt="Logo"
                     className={`${previewMode === 'mobile' ? 'h-5' : previewMode === 'tablet' ? 'h-6' : 'h-6 sm:h-7 md:h-8'} w-auto`}
                   />
@@ -91,7 +91,7 @@ const FooterSection = ({
                   className={`${previewMode === 'mobile' ? 'text-base' : previewMode === 'tablet' ? 'text-lg' : 'text-lg sm:text-xl'} font-bold`}
                 >
                   <InlineEditableField
-                    value={content.logo?.text || 'Website Name'}
+                    value={content.logo.text || 'Website Name'}
                     onChange={(newValue) => handleFieldUpdate('logo', newValue)}
                     isEditable={isSelected && previewMode === 'desktop'}
                     className="text-white"

@@ -163,7 +163,7 @@ const HeaderSection = ({
 
           {/* Mobile menu button */}
           <div
-            className={`${previewMode === 'mobile' || previewMode === 'tablet' ? 'block' : 'hidden'}`}
+            className={`${previewMode === 'mobile' || previewMode === 'tablet' ? 'block' : 'md:hidden'}`}
           >
             <Button
               variant="ghost"
@@ -184,8 +184,10 @@ const HeaderSection = ({
         </div>
 
         {/* Mobile menu */}
-        {mobileMenuOpen && previewMode === 'mobile' && (
-          <div className="mt-4 py-4 border-t border-gray-200">
+        {mobileMenuOpen && (
+          <div
+            className={`mt-4 py-4 border-t border-gray-200 ${previewMode === 'mobile' || previewMode === 'tablet' ? 'block' : 'md:hidden'}`}
+          >
             <div className="flex flex-col space-y-4">
               {content.menuItems?.map((item) => (
                 <InlineEditableField

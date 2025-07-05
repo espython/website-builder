@@ -66,19 +66,25 @@ const SectionEditor = () => {
 
   if (!selectedSection) {
     return (
-      <div>
-        <h2 className="text-lg font-medium text-center p-4">Add Section</h2>
-        <div className="mt-2 w-full h-[80%] overflow-y-auto p-8 grid grid-cols-2 gap-1">
-          {sectionTypes.map((section) => (
-            <button
-              key={section.type}
-              onClick={() => handleAddSection(section.type)}
-              className="flex flex-col items-center p-3 hover:bg-blue-50 rounded-md transition-colors"
-            >
-              <section.icon size={24} className="text-blue-600 mb-1" />
-              <span className="text-sm text-gray-700">{section.label}</span>
-            </button>
-          ))}
+      <div className="flex flex-col h-full">
+        <h2 className="text-lg font-medium text-center p-3 sm:p-4 border-b border-gray-100">
+          Add Section
+        </h2>
+        <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
+            {sectionTypes.map((section) => (
+              <button
+                key={section.type}
+                onClick={() => handleAddSection(section.type)}
+                className="flex flex-col items-center justify-center p-2 sm:p-3 hover:bg-blue-50 rounded-md transition-colors border border-gray-100 hover:border-blue-200"
+              >
+                <section.icon size={20} className="text-blue-600 mb-1" />
+                <span className="text-xs sm:text-sm text-center text-gray-700">
+                  {section.label}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -159,7 +165,7 @@ const SectionEditor = () => {
         );
       default:
         return (
-          <div className="p-6 text-center">
+          <div className="p-4 sm:p-6 text-center">
             <p className="text-gray-500">
               No editor available for this section type: {selectedSection?.type}
             </p>
@@ -169,55 +175,64 @@ const SectionEditor = () => {
   };
 
   return (
-    <div className="p-4 h-full overflow-y-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-800">
-          Edit{' '}
-          {selectedSection.type.charAt(0).toUpperCase() +
-            selectedSection?.type.slice(1)}{' '}
-          Section
-        </h2>
+    <div className="flex flex-col h-full">
+      <div className="sticky top-0 bg-white z-10 border-b border-gray-200">
+        <div className="flex justify-between items-center p-3 sm:p-4">
+          <div className="flex items-center">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-800">
+              {selectedSection.type.charAt(0).toUpperCase() +
+                selectedSection?.type.slice(1)}{' '}
+              Section
+            </h2>
+          </div>
 
-        <button
-          className={`p-2 rounded-md ${
-            showDeleteConfirm
-              ? 'bg-red-500 text-white'
-              : 'text-gray-500 hover:bg-gray-100'
-          }`}
-          onClick={handleDeleteSection}
-          title={showDeleteConfirm ? 'Confirm Delete' : 'Delete Section'}
-        >
-          <Trash2 size={18} />
-        </button>
-      </div>
-
-      {showDeleteConfirm && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm">
-          <p className="text-red-800 font-medium mb-2">
-            Are you sure you want to delete this section?
-          </p>
-          <div className="flex space-x-2">
+          <div className="flex items-center space-x-2">
             <button
-              className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-md text-gray-800"
-              onClick={() => setShowDeleteConfirm(false)}
+              className={`p-1.5 sm:p-2 rounded-md ${
+                showDeleteConfirm
+                  ? 'bg-red-500 text-white'
+                  : 'text-gray-500 hover:bg-gray-100'
+              }`}
+              onClick={handleDeleteSection}
+              title={showDeleteConfirm ? 'Confirm Delete' : 'Delete Section'}
             >
-              Cancel
-            </button>
-            <button
-              className="px-3 py-1 bg-red-500 hover:bg-red-600 rounded-md text-white"
-              onClick={() => {
-                deleteSection(selectedSection.id);
-                setShowDeleteConfirm(false);
-              }}
-            >
-              Delete
+              <Trash2 size={16} className="sm:size-[18px]" />
             </button>
           </div>
         </div>
-      )}
 
-      <div className="bg-white rounded-lg border border-gray-200">
-        {renderEditor()}
+        {showDeleteConfirm && (
+          <div className="mx-3 sm:mx-4 mb-3 p-2 sm:p-3 bg-red-50 border border-red-200 rounded-md text-xs sm:text-sm">
+            <p className="text-red-800 font-medium mb-2">
+              Are you sure you want to delete this section?
+            </p>
+            <div className="flex space-x-2">
+              <button
+                className="px-2 sm:px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-md text-gray-800"
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-2 sm:px-3 py-1 bg-red-500 hover:bg-red-600 rounded-md text-white"
+                onClick={() => {
+                  deleteSection(selectedSection.id);
+                  setShowDeleteConfirm(false);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-2 sm:p-4">
+          <div className="bg-white rounded-lg border border-gray-200">
+            {renderEditor()}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -50,48 +50,43 @@ const FeaturesSection = ({
 
   return (
     <Card
-      className={`${previewMode === 'mobile' ? 'py-6 px-3' : previewMode === 'tablet' ? 'py-8 px-4' : 'py-10 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8'} bg-white cursor-pointer rounded-none ${isSelected ? 'outline-2 outline-blue-500' : ''}`}
+      className={`${previewMode === 'mobile' ? 'py-5' : previewMode === 'tablet' ? 'py-6' : 'py-8'} bg-white cursor-pointer ${isSelected ? 'outline-2 outline-blue-500' : ''}`}
       onClick={onClick}
     >
       <div
-        className={`container mx-auto ${previewMode === 'mobile' ? 'px-1' : 'px-2 sm:px-4'}`}
+        className={`max-w-6xl mx-auto ${previewMode === 'mobile' ? 'px-3' : previewMode === 'tablet' ? 'px-4' : 'px-4 sm:px-6'}`}
       >
-        <div
-          className={`text-center ${previewMode === 'mobile' ? 'mb-5' : previewMode === 'tablet' ? 'mb-6' : 'mb-8 sm:mb-10 md:mb-12'}`}
+        <h2
+          className={`${previewMode === 'mobile' ? 'text-xl' : previewMode === 'tablet' ? 'text-2xl' : 'text-2xl sm:text-3xl'} font-bold text-center ${previewMode === 'mobile' ? 'mb-4' : previewMode === 'tablet' ? 'mb-6' : 'mb-6 sm:mb-8'}`}
         >
-          <h2
-            className={`${previewMode === 'mobile' ? 'text-xl' : previewMode === 'tablet' ? 'text-2xl' : 'text-2xl sm:text-2xl md:text-3xl'} font-bold ${previewMode === 'mobile' ? 'mb-2' : 'mb-3 sm:mb-4'}`}
+          <InlineEditableField
+            value={content.title}
+            onChange={(newValue) => handleFieldUpdate('title', newValue)}
+            isEditable={isSelected && previewMode === 'desktop'}
+            className="inline-block"
+          />
+        </h2>
+        {content.description && (
+          <p
+            className={`${previewMode === 'mobile' ? 'text-sm' : previewMode === 'tablet' ? 'text-base' : 'text-base sm:text-lg'} text-gray-600 max-w-2xl mx-auto`}
           >
             <InlineEditableField
-              value={content.title}
-              onChange={(newValue) => handleFieldUpdate('title', newValue)}
+              value={content.description}
+              onChange={(newValue) =>
+                handleFieldUpdate('description', newValue)
+              }
               isEditable={isSelected && previewMode === 'desktop'}
               className="inline-block"
             />
-          </h2>
-          {content.description && (
-            <p
-              className={`${previewMode === 'mobile' ? 'text-sm' : previewMode === 'tablet' ? 'text-base' : 'text-base sm:text-lg'} text-gray-600 max-w-2xl mx-auto`}
-            >
-              <InlineEditableField
-                value={content.description}
-                onChange={(newValue) =>
-                  handleFieldUpdate('description', newValue)
-                }
-                isEditable={isSelected && previewMode === 'desktop'}
-                className="inline-block"
-              />
-            </p>
-          )}
-        </div>
-
+          </p>
+        )}
         <div
-          className={`grid ${previewMode === 'mobile' ? 'grid-cols-1 gap-3' : previewMode === 'tablet' ? 'grid-cols-2 gap-4' : 'grid-cols-3 gap-8'}`}
+          className={`grid ${previewMode === 'mobile' ? 'grid-cols-1 gap-4' : previewMode === 'tablet' ? 'grid-cols-2 gap-5' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'}`}
         >
           {content.items?.map((item, index) => (
             <Card
               key={item.id || index}
-              className={`${previewMode === 'mobile' ? 'p-3' : previewMode === 'tablet' ? 'p-4' : 'p-4 sm:p-5 md:p-6'} flex flex-col h-full hover:shadow-md transition-shadow`}
+              className={`${previewMode === 'mobile' ? 'p-4' : previewMode === 'tablet' ? 'p-5' : 'p-6'} flex flex-col h-full hover:shadow-md transition-shadow`}
               onClick={(e) => e.stopPropagation()}
             >
               {item.icon && (
@@ -108,7 +103,7 @@ const FeaturesSection = ({
                 </div>
               )}
               <h3
-                className={`${previewMode === 'mobile' ? 'text-base' : previewMode === 'tablet' ? 'text-lg' : 'text-lg sm:text-xl'} font-semibold ${previewMode === 'mobile' ? 'mb-1' : 'mb-2 sm:mb-3'}`}
+                className={`${previewMode === 'mobile' ? 'text-lg' : previewMode === 'tablet' ? 'text-lg' : 'text-xl'} font-semibold ${previewMode === 'mobile' ? 'mb-2' : 'mb-3 sm:mb-4'}`}
               >
                 <InlineEditableField
                   value={item.title}
