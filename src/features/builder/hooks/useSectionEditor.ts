@@ -5,6 +5,7 @@ import {
   PricingPlan,
   Section,
   SectionContent,
+  Testimonial,
 } from '@/features/sections/types/section';
 import { useSelectSection } from '@/features/sections/hooks/sections-hook';
 
@@ -17,7 +18,8 @@ export type SectionFieldValue =
   | boolean
   | FeatureItem[]
   | MenuItem[]
-  | PricingPlan[];
+  | PricingPlan[]
+  | Testimonial[];
 
 /**
  * A custom hook that provides standardized section editing functionality
@@ -34,7 +36,7 @@ export function useSectionEditor<T extends SectionContent>(
   debounceTime = 500
 ) {
   // Initialize content state from section props
-  const [content, setContent] = useState<T>(section.content as T);
+  const [content, setContent] = useState<T>(section?.content as T);
 
   // Track save status
   const [isSaved, setIsSaved] = useState(true);
@@ -44,9 +46,10 @@ export function useSectionEditor<T extends SectionContent>(
 
   // Update local state when section changes (e.g. when switching between sections)
   useEffect(() => {
+    if (!section) return;
     setContent(section.content as T);
     setIsSaved(true);
-  }, [section.id, section.content]);
+  }, [section?.id, section?.content]);
 
   // Handle field changes
   const handleChange = (field: keyof T, value: SectionFieldValue) => {
@@ -59,13 +62,13 @@ export function useSectionEditor<T extends SectionContent>(
 
   // Save changes immediately and update status
   const handleSave = () => {
-    updateSection(section.id, content);
+    updateSection(section?.id, content);
     setIsSaved(true);
   };
 
   // Save changes and close the editor
   const saveAndClose = () => {
-    updateSection(section.id, content);
+    updateSection(section?.id, content);
     setIsSaved(true);
     selectSection(''); // Deselect the section to close the editor
   };
@@ -73,7 +76,10 @@ export function useSectionEditor<T extends SectionContent>(
   // Debounced auto-save
   useEffect(() => {
     // Skip initial render or when content equals section content
-    if (JSON.stringify(content) === JSON.stringify(section.content)) {
+    if (
+      !section ||
+      JSON.stringify(content) === JSON.stringify(section.content)
+    ) {
       return;
     }
 
@@ -82,13 +88,13 @@ export function useSectionEditor<T extends SectionContent>(
 
     // Set up debounce timer
     const timer = setTimeout(() => {
-      updateSection(section.id, content);
+      updateSection(section?.id, content);
       setIsSaved(true);
     }, debounceTime);
 
     // Cleanup timer on component unmount or content change
     return () => clearTimeout(timer);
-  }, [content, section.id, section.content, updateSection, debounceTime]);
+  }, [content, section?.id, section?.content, updateSection, debounceTime]);
 
   return {
     content,

@@ -120,7 +120,7 @@ const SortableFeatureItem = ({
 
 const FeaturesEditor = ({ section, updateSection }: FeaturesEditorProps) => {
   // Use the standardized section editor hook
-  const { content, setContent, handleChange, saveAndClose, isSaved } =
+  const { content, setContent, handleChange } =
     useSectionEditor<FeaturesContent>(section, updateSection);
 
   const [editingFeature, setEditingFeature] = useState<FeatureItem | null>(
@@ -458,19 +458,6 @@ const FeaturesEditor = ({ section, updateSection }: FeaturesEditorProps) => {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Save Button */}
-      <div className="pt-4 border-t border-gray-200 mt-4">
-        <Button
-          onClick={saveAndClose}
-          variant={isSaved ? 'outline' : 'default'}
-          className={
-            isSaved ? 'bg-green-600 text-white hover:bg-green-700' : ''
-          }
-        >
-          {isSaved ? 'Saved ✓' : 'Save Changes'}
-        </Button>
       </div>
     </div>
   );

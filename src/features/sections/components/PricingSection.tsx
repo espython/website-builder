@@ -102,7 +102,6 @@ const PricingSection = ({
             <div
               key={plan.id}
               className={`bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:-translate-y-1 ${plan.featured ? 'border-2 border-blue-500 relative' : ''}`}
-              onClick={(e) => e.stopPropagation()}
             >
               {plan.featured && (
                 <div

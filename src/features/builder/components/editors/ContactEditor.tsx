@@ -8,12 +8,11 @@ import {
   SectionContent,
 } from '@/features/sections/types/section';
 import { Trash } from 'lucide-react';
-import { useSectionEditor } from '@/features/builder/hooks/useSectionEditor';
 import { Input } from '@/shared/components/ui/input';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Label } from '@/shared/components/ui/label';
-import { Button } from '@/shared/components/ui/button';
 import { Checkbox } from '@/shared/components/ui/checkbox';
+import { Button } from '@/shared/components/ui/button';
 
 interface ContactEditorProps {
   section: Section;
@@ -21,7 +20,6 @@ interface ContactEditorProps {
 }
 
 const ContactEditor = ({ section, updateSection }: ContactEditorProps) => {
-  const { saveAndClose, isSaved } = useSectionEditor(section, updateSection);
   const [content, setContent] = useState<ContactContent>(
     section.content as ContactContent
   );
@@ -209,17 +207,7 @@ const ContactEditor = ({ section, updateSection }: ContactEditorProps) => {
         </div>
       </div>
 
-      <div className="pt-4 border-t border-gray-200">
-        <Button
-          onClick={saveAndClose}
-          variant={isSaved ? 'outline' : 'default'}
-          className={
-            isSaved ? 'bg-green-600 text-white hover:bg-green-700' : ''
-          }
-        >
-          {isSaved ? 'Saved ✓' : 'Save Changes'}
-        </Button>
-      </div>
+      {/* Save button removed */}
     </div>
   );
 };

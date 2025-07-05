@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect, JSX } from 'react';
 import {
   Section,
   TestimonialsContent,
@@ -32,6 +31,7 @@ import { Textarea } from '@/shared/components/ui/textarea';
 import { Label } from '@/shared/components/ui/label';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent } from '@/shared/components/ui/card';
+import { JSX } from 'react';
 
 interface TestimonialsEditorProps {
   section: Section;
@@ -193,9 +193,10 @@ const TestimonialsEditor = ({
   section,
   updateSection,
 }: TestimonialsEditorProps) => {
-  const { saveAndClose, isSaved } = useSectionEditor(section, updateSection);
-  const [content, setContent] = useState<TestimonialsContent>(
-    section.content as TestimonialsContent
+  // Use the section editor hook
+  const { content, handleChange } = useSectionEditor<TestimonialsContent>(
+    section,
+    updateSection
   );
 
   // Configure sensors for drag and drop
@@ -232,21 +233,7 @@ const TestimonialsEditor = ({
     }
   };
 
-  // Update local state when section changes
-  useEffect(() => {
-    setContent(section.content as TestimonialsContent);
-  }, [section.id, section.content]);
-
   // Handle input changes
-  const handleChange = (
-    field: keyof TestimonialsContent,
-    value: string | boolean | Testimonial[]
-  ) => {
-    const updatedContent = { ...content, [field]: value };
-    setContent(updatedContent);
-  };
-
-  // Handle testimonial changes
   const handleTestimonialChange = (
     index: number,
     field: keyof Testimonial,
@@ -320,15 +307,6 @@ const TestimonialsEditor = ({
       </div>
     );
   };
-
-  // Debounced auto-save when changes are made
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      updateSection(section.id, content);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [content, section.id, updateSection]);
 
   return (
     <div className="p-4 space-y-6 overflow-y-auto max-h-[calc(100vh-200px)]">
@@ -417,19 +395,6 @@ const TestimonialsEditor = ({
             </div>
           )}
         </div>
-      </div>
-
-      <div className="pt-4 border-t border-gray-200 sticky bottom-0 bg-white pb-4">
-        <button
-          onClick={saveAndClose}
-          className={`px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-            isSaved
-              ? 'bg-green-600 hover:bg-green-700'
-              : 'bg-blue-600 hover:bg-blue-700'
-          }`}
-        >
-          {isSaved ? 'Saved ✓' : 'Save Changes'}
-        </button>
       </div>
     </div>
   );

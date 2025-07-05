@@ -7,7 +7,7 @@ import {
   useDeleteSection,
   useAddSection,
 } from '@/features/sections/hooks/sections-hook';
-import { SectionType } from '@/features/sections/types/section';
+import { Section, SectionType } from '@/features/sections/types/section';
 import {
   Trash2,
   Layout,
@@ -18,6 +18,7 @@ import {
   Mail,
   Store,
   CheckCircle,
+  Save,
 } from 'lucide-react';
 import HeroEditor from './editors/HeroEditor';
 import FeaturesEditor from './editors/FeaturesEditor';
@@ -30,6 +31,8 @@ import CTAEditor from './editors/CTAEditor';
 import HeaderEditor from './editors/HeaderEditor';
 import FooterEditor from './editors/FooterEditor';
 import { generateSampleContent } from '@/features/sections/utils/sample-content';
+import { Button } from '@/shared/components/ui/button';
+import { useSectionEditor } from '../hooks/useSectionEditor';
 
 // Define section types with their icons
 const sectionTypes = [
@@ -54,6 +57,10 @@ const SectionEditor = () => {
   const updateSection = useUpdateSection();
   const deleteSection = useDeleteSection();
   const addSection = useAddSection();
+  const { saveAndClose } = useSectionEditor(
+    selectedSection as Section,
+    updateSection
+  );
 
   const handleAddSection = (type: SectionType) => {
     // Generate sample content based on section type
@@ -64,6 +71,14 @@ const SectionEditor = () => {
   // Handle delete confirmation
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
+  // Save section changes
+  const handleSaveSection = () => {
+    if (selectedSection) {
+      updateSection(selectedSection.id, selectedSection.content);
+      saveAndClose();
+    }
+  };
+
   if (!selectedSection) {
     return (
       <div className="flex flex-col h-full">
@@ -71,18 +86,18 @@ const SectionEditor = () => {
           Add Section
         </h2>
         <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-4">
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-2  gap-2 sm:gap-3">
             {sectionTypes.map((section) => (
-              <button
+              <Button
                 key={section.type}
                 onClick={() => handleAddSection(section.type)}
-                className="flex flex-col items-center justify-center p-2 sm:p-3 hover:bg-blue-50 rounded-md transition-colors border border-gray-100 hover:border-blue-200"
+                variant="outline"
               >
                 <section.icon size={20} className="text-blue-600 mb-1" />
                 <span className="text-xs sm:text-sm text-center text-gray-700">
                   {section.label}
                 </span>
-              </button>
+              </Button>
             ))}
           </div>
         </div>
@@ -187,17 +202,26 @@ const SectionEditor = () => {
           </div>
 
           <div className="flex items-center space-x-2">
-            <button
+            <Button
+              className="p-1.5 sm:p-2 rounded-md "
+              variant="outline"
+              onClick={handleSaveSection}
+              title="Save Changes"
+            >
+              <Save size={16} className="sm:size-[18px]" />
+            </Button>
+            <Button
               className={`p-1.5 sm:p-2 rounded-md ${
                 showDeleteConfirm
                   ? 'bg-red-500 text-white'
                   : 'text-gray-500 hover:bg-gray-100'
               }`}
+              variant={showDeleteConfirm ? 'destructive' : 'outline'}
               onClick={handleDeleteSection}
               title={showDeleteConfirm ? 'Confirm Delete' : 'Delete Section'}
             >
               <Trash2 size={16} className="sm:size-[18px]" />
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -207,21 +231,21 @@ const SectionEditor = () => {
               Are you sure you want to delete this section?
             </p>
             <div className="flex space-x-2">
-              <button
-                className="px-2 sm:px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-md text-gray-800"
+              <Button
+                variant="outline"
                 onClick={() => setShowDeleteConfirm(false)}
               >
                 Cancel
-              </button>
-              <button
-                className="px-2 sm:px-3 py-1 bg-red-500 hover:bg-red-600 rounded-md text-white"
+              </Button>
+              <Button
+                variant="destructive"
                 onClick={() => {
                   deleteSection(selectedSection.id);
                   setShowDeleteConfirm(false);
                 }}
               >
                 Delete
-              </button>
+              </Button>
             </div>
           </div>
         )}

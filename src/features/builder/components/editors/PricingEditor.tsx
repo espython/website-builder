@@ -21,8 +21,10 @@ interface PricingEditorProps {
 
 const PricingEditor = ({ section, updateSection }: PricingEditorProps) => {
   // Use the standardized section editor hook for consistent behavior
-  const { content, handleChange, saveAndClose, isSaved } =
-    useSectionEditor<PricingContent>(section, updateSection);
+  const { content, handleChange } = useSectionEditor<PricingContent>(
+    section,
+    updateSection
+  );
 
   // Ensure plans array always exists to prevent undefined errors
   const plans = content?.plans || [];
@@ -348,19 +350,6 @@ const PricingEditor = ({ section, updateSection }: PricingEditorProps) => {
             </div>
           )}
         </div>
-      </div>
-
-      <div className="pt-4 border-t border-gray-200 sticky bottom-0 bg-white pb-4">
-        <button
-          onClick={saveAndClose}
-          className={`px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-            isSaved
-              ? 'bg-green-600 hover:bg-green-700'
-              : 'bg-blue-600 hover:bg-blue-700'
-          }`}
-        >
-          {isSaved ? 'Saved ✓' : 'Save Changes'}
-        </button>
       </div>
     </div>
   );

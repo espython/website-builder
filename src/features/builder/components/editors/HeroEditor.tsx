@@ -9,7 +9,6 @@ import { useSectionEditor } from '@/features/builder/hooks/useSectionEditor';
 import { Input } from '@/shared/components/ui/input';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Label } from '@/shared/components/ui/label';
-import { Button } from '@/shared/components/ui/button';
 
 interface HeroEditorProps {
   section: Section;
@@ -18,8 +17,10 @@ interface HeroEditorProps {
 
 const HeroEditor = ({ section, updateSection }: HeroEditorProps) => {
   // Use the standardized section editor hook
-  const { content, handleChange, saveAndClose, isSaved } =
-    useSectionEditor<HeroContent>(section, updateSection);
+  const { content, handleChange } = useSectionEditor<HeroContent>(
+    section,
+    updateSection
+  );
 
   return (
     <div className="p-4 space-y-6">
@@ -120,17 +121,7 @@ const HeroEditor = ({ section, updateSection }: HeroEditorProps) => {
         </div>
       </div>
 
-      <div className="pt-4 border-t border-gray-200">
-        <Button
-          onClick={saveAndClose}
-          variant={isSaved ? 'outline' : 'default'}
-          className={
-            isSaved ? 'bg-green-600 text-white hover:bg-green-700' : ''
-          }
-        >
-          {isSaved ? 'Saved ✓' : 'Save Changes'}
-        </Button>
-      </div>
+      {/* Save button removed */}
     </div>
   );
 };

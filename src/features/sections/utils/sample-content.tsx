@@ -12,7 +12,6 @@ import {
   FooterContent,
   SectionContent,
 } from '../types/section';
-
 // Generate sample hero content
 const generateHeroContent = (): HeroContent => ({
   title: 'Build Your Dream Website Today',

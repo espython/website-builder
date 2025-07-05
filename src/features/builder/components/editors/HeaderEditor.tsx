@@ -34,8 +34,10 @@ interface HeaderEditorProps {
 
 const HeaderEditor = ({ section, updateSection }: HeaderEditorProps) => {
   // Use the standardized section editor hook
-  const { content, handleChange, saveAndClose, isSaved } =
-    useSectionEditor<HeaderContent>(section, updateSection);
+  const { content, handleChange } = useSectionEditor<HeaderContent>(
+    section,
+    updateSection
+  );
 
   // Add new menu item at the top level
   const addMenuItem = () => {
@@ -466,18 +468,6 @@ const HeaderEditor = ({ section, updateSection }: HeaderEditorProps) => {
             </div>
           )}
         </div>
-      </div>
-
-      <div className="pt-4 border-t border-gray-200 sticky bottom-0 bg-white pb-4">
-        <Button
-          onClick={saveAndClose}
-          variant={isSaved ? 'outline' : 'default'}
-          className={
-            isSaved ? 'bg-green-600 text-white hover:bg-green-700' : ''
-          }
-        >
-          {isSaved ? 'Saved ✓' : 'Save Changes'}
-        </Button>
       </div>
     </div>
   );

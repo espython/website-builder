@@ -9,7 +9,6 @@ import {
   SectionContent,
 } from '@/features/sections/types/section';
 import { Trash, Plus, GripVertical } from 'lucide-react';
-import { useSectionEditor } from '@/features/builder/hooks/useSectionEditor';
 import { Input } from '@/shared/components/ui/input';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Label } from '@/shared/components/ui/label';
@@ -22,7 +21,6 @@ interface FooterEditorProps {
 }
 
 const FooterEditor = ({ section, updateSection }: FooterEditorProps) => {
-  const { saveAndClose, isSaved } = useSectionEditor(section, updateSection);
   const [content, setContent] = useState<FooterContent>(
     section.content as FooterContent
   );
@@ -406,18 +404,6 @@ const FooterEditor = ({ section, updateSection }: FooterEditorProps) => {
             </div>
           </CardContent>
         </Card>
-      </div>
-
-      <div className="pt-4 border-t border-gray-200 sticky bottom-0 bg-white pb-4">
-        <Button
-          onClick={saveAndClose}
-          variant={isSaved ? 'outline' : 'default'}
-          className={
-            isSaved ? 'bg-green-600 text-white hover:bg-green-700' : ''
-          }
-        >
-          {isSaved ? 'Saved ' : 'Save Changes'}
-        </Button>
       </div>
     </div>
   );

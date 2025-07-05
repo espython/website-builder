@@ -53,7 +53,7 @@ const CtaSection = ({
       }
     >
       {/* Dark overlay for image backgrounds */}
-      {content.backgroundImage && (
+      {content.backgroundImage && content.overlay && (
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
       )}
 
@@ -77,7 +77,7 @@ const CtaSection = ({
               className={`${previewMode === 'mobile' ? 'text-sm' : previewMode === 'tablet' ? 'text-base' : 'text-base sm:text-lg md:text-xl'} ${previewMode === 'mobile' ? 'mb-4' : previewMode === 'tablet' ? 'mb-5' : 'mb-6 sm:mb-7 md:mb-8'} text-white text-opacity-90`}
             >
               <InlineEditableField
-                value={content.description}
+                value={content.description || ''}
                 onChange={(newValue) =>
                   handleFieldUpdate('description', newValue)
                 }
@@ -94,7 +94,10 @@ const CtaSection = ({
               className={`bg-white hover:bg-gray-100 text-blue-600 font-medium ${previewMode === 'mobile' ? 'text-xs px-4 py-1' : previewMode === 'tablet' ? 'text-sm px-5 py-2' : 'text-sm sm:text-base md:text-lg px-6 sm:px-7 md:px-8 py-2.5 sm:py-3'} transition-colors shadow-md`}
               onClick={(e) => {
                 e.preventDefault();
-                e.stopPropagation();
+                // Don't stop propagation so section selection works
+                if (content.buttonLink) {
+                  window.open(content.buttonLink, '_blank');
+                }
               }}
             >
               <InlineEditableField

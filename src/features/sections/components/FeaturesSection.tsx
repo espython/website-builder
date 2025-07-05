@@ -5,6 +5,7 @@ import { useUpdateSection } from '../hooks/sections-hook';
 import { Card } from '@/shared/components/ui/card';
 import { InlineEditableField } from './common/InlineEditableField';
 import { PreviewMode } from '@/features/preview/store/uiStore';
+import { RenderIcon } from '@/shared/utils/icon-utils';
 
 interface FeaturesSectionProps {
   content: FeaturesContent;
@@ -50,11 +51,11 @@ const FeaturesSection = ({
 
   return (
     <Card
-      className={`${previewMode === 'mobile' ? 'py-5' : previewMode === 'tablet' ? 'py-6' : 'py-8'} bg-white cursor-pointer ${isSelected ? 'outline-2 outline-blue-500' : ''}`}
+      className={`${previewMode === 'mobile' ? 'py-5' : previewMode === 'tablet' ? 'py-6' : 'px-8 py-8'} bg-white cursor-pointer ${isSelected ? 'outline-2 outline-blue-500' : 'rounded-none'}`}
       onClick={onClick}
     >
       <div
-        className={`max-w-6xl mx-auto ${previewMode === 'mobile' ? 'px-3' : previewMode === 'tablet' ? 'px-4' : 'px-4 sm:px-6'}`}
+        className={`${previewMode === 'mobile' ? 'px-8' : previewMode === 'tablet' ? 'px-8' : 'px-12 sm:px-6'}`}
       >
         <h2
           className={`${previewMode === 'mobile' ? 'text-xl' : previewMode === 'tablet' ? 'text-2xl' : 'text-2xl sm:text-3xl'} font-bold text-center ${previewMode === 'mobile' ? 'mb-4' : previewMode === 'tablet' ? 'mb-6' : 'mb-6 sm:mb-8'}`}
@@ -68,7 +69,7 @@ const FeaturesSection = ({
         </h2>
         {content.description && (
           <p
-            className={`${previewMode === 'mobile' ? 'text-sm' : previewMode === 'tablet' ? 'text-base' : 'text-base sm:text-lg'} text-gray-600 max-w-2xl mx-auto`}
+            className={`${previewMode === 'mobile' ? 'text-sm' : previewMode === 'tablet' ? 'text-base' : 'text-base sm:text-lg'} text-gray-600`}
           >
             <InlineEditableField
               value={content.description}
@@ -87,18 +88,13 @@ const FeaturesSection = ({
             <Card
               key={item.id || index}
               className={`${previewMode === 'mobile' ? 'p-4' : previewMode === 'tablet' ? 'p-5' : 'p-6'} flex flex-col h-full hover:shadow-md transition-shadow`}
-              onClick={(e) => e.stopPropagation()}
             >
               {item.icon && (
                 <div className="text-blue-500 mb-3 sm:mb-4">
                   <div
                     className={`${previewMode === 'mobile' ? 'w-8 h-8' : previewMode === 'tablet' ? 'w-9 h-9' : 'w-10 h-10 sm:w-12 sm:h-12'} rounded-full bg-blue-100 flex items-center justify-center`}
                   >
-                    <span
-                      className={`${previewMode === 'mobile' ? 'text-lg' : previewMode === 'tablet' ? 'text-xl' : 'text-xl sm:text-2xl'}`}
-                    >
-                      {item.icon}
-                    </span>
+                    <RenderIcon icon={item.icon} />
                   </div>
                 </div>
               )}
