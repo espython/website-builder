@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   FeatureItem,
+  GalleryItem,
   MenuItem,
   PricingPlan,
   Section,
@@ -19,7 +20,8 @@ export type SectionFieldValue =
   | FeatureItem[]
   | MenuItem[]
   | PricingPlan[]
-  | Testimonial[];
+  | Testimonial[]
+  | GalleryItem[];
 
 /**
  * A custom hook that provides standardized section editing functionality

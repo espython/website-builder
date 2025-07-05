@@ -1,93 +1,46 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import {
-  Section,
-  ContactContent,
-  FooterLink,
-  SectionContent,
-} from '@/features/sections/types/section';
-import { Trash } from 'lucide-react';
+import { Section, ContactContent } from '@/features/sections/types/section';
 import { Input } from '@/shared/components/ui/input';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Label } from '@/shared/components/ui/label';
 import { Checkbox } from '@/shared/components/ui/checkbox';
-import { Button } from '@/shared/components/ui/button';
+import { useSectionEditor } from '../../hooks/useSectionEditor';
+import { useContactForm } from '../../hooks/useContactForm';
+import SocialLinksList from './contact/SocialLinksList';
+import { BaseEditorProps } from './types';
 
-interface ContactEditorProps {
+interface ContactEditorProps extends BaseEditorProps {
   section: Section;
-  updateSection: (id: string, content: SectionContent) => void;
 }
 
 const ContactEditor = ({ section, updateSection }: ContactEditorProps) => {
-  const [content, setContent] = useState<ContactContent>(
-    section.content as ContactContent
+  // Use the standardized section editor hook for consistent behavior
+  const { content, handleChange } = useSectionEditor<ContactContent>(
+    section,
+    updateSection
   );
 
-  // Update local state when section changes
-  useEffect(() => {
-    setContent(section.content as ContactContent);
-  }, [section.id, section.content]);
+  // Use the contact form hook to manage all social link-related logic
+  const { handleSocialLinkChange, addSocialLink, removeSocialLink } =
+    useContactForm({
+      content,
+      onContentChange: handleChange,
+    });
 
-  // Handle input changes
-  const handleChange = (
-    field: keyof ContactContent,
-    value: string | boolean | FooterLink[]
-  ) => {
-    const updatedContent = { ...content, [field]: value };
-    setContent(updatedContent);
-  };
-
-  // Handle social link changes
-  const handleSocialLinkChange = (
-    index: number,
-    field: keyof FooterLink,
-    value: string
-  ) => {
-    const updatedLinks = [...(content.socialLinks || [])];
-    updatedLinks[index] = { ...updatedLinks[index], [field]: value };
-    handleChange('socialLinks', updatedLinks);
-  };
-
-  // Add new social link
-  const addSocialLink = () => {
-    const updatedLinks = [
-      ...(content.socialLinks || []),
-      { label: '', link: '' },
-    ];
-    handleChange('socialLinks', updatedLinks as FooterLink[]);
-  };
-
-  // Remove social link
-  const removeSocialLink = (index: number) => {
-    const updatedLinks = [...(content.socialLinks || [])];
-    updatedLinks.splice(index, 1);
-    handleChange('socialLinks', updatedLinks);
-  };
-
-  // Debounced auto-save when changes are made
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      updateSection(section.id, content);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [content, section.id, updateSection]);
+  // Ensure socialLinks array always exists
+  const socialLinks = content?.socialLinks || [];
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="space-y-6">
       <div className="space-y-4">
-        <h3 className="font-medium text-gray-800 text-sm uppercase tracking-wide">
-          Contact Information
-        </h3>
-
         <div className="space-y-2">
           <Label htmlFor="title">Title</Label>
           <Input
             id="title"
-            type="text"
-            value={content.title || ''}
+            value={content?.title || ''}
             onChange={(e) => handleChange('title', e.target.value)}
+            placeholder="Contact section title"
           />
         </div>
 
@@ -95,8 +48,9 @@ const ContactEditor = ({ section, updateSection }: ContactEditorProps) => {
           <Label htmlFor="description">Description</Label>
           <Textarea
             id="description"
-            value={content.description || ''}
+            value={content?.description || ''}
             onChange={(e) => handleChange('description', e.target.value)}
+            placeholder="Contact section description"
             rows={2}
           />
         </div>
@@ -107,8 +61,9 @@ const ContactEditor = ({ section, updateSection }: ContactEditorProps) => {
             <Input
               id="email"
               type="email"
-              value={content.email || ''}
+              value={content?.email || ''}
               onChange={(e) => handleChange('email', e.target.value)}
+              placeholder="contact@example.com"
             />
           </div>
 
@@ -117,8 +72,9 @@ const ContactEditor = ({ section, updateSection }: ContactEditorProps) => {
             <Input
               id="phone"
               type="tel"
-              value={content.phone || ''}
+              value={content?.phone || ''}
               onChange={(e) => handleChange('phone', e.target.value)}
+              placeholder="+1 (123) 456-7890"
             />
           </div>
         </div>
@@ -127,87 +83,44 @@ const ContactEditor = ({ section, updateSection }: ContactEditorProps) => {
           <Label htmlFor="address">Address</Label>
           <Input
             id="address"
-            type="text"
-            value={content.address || ''}
+            value={content?.address || ''}
             onChange={(e) => handleChange('address', e.target.value)}
+            placeholder="123 Main St, City, Country"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="mapUrl">Map URL (Google Maps embed URL)</Label>
+          <Label htmlFor="mapUrl">Map URL</Label>
           <Input
             id="mapUrl"
             type="url"
-            value={content.mapUrl || ''}
+            value={content?.mapUrl || ''}
             onChange={(e) => handleChange('mapUrl', e.target.value)}
+            placeholder="https://maps.google.com/embed?pb=..."
           />
         </div>
 
-        <div className="mt-4 flex items-center space-x-2">
+        <div className="flex items-center space-x-2 pt-2">
           <Checkbox
             id="showForm"
-            checked={content.showForm === true}
+            checked={content?.showForm === true}
             onCheckedChange={(checked) => handleChange('showForm', !!checked)}
           />
           <Label
             htmlFor="showForm"
-            className="text-sm text-gray-700 font-normal"
+            className="text-sm font-normal cursor-pointer"
           >
             Show contact form
           </Label>
         </div>
 
-        <div className="pt-4 border-t border-gray-200">
-          <Label className="block mb-2">Social Links</Label>
-
-          {(content.socialLinks || []).map((link, index) => (
-            <div key={index} className="flex mb-3 items-center">
-              <div className="flex-1 mr-2">
-                <Input
-                  type="text"
-                  value={link.label}
-                  placeholder="Platform (e.g. Twitter)"
-                  onChange={(e) =>
-                    handleSocialLinkChange(index, 'label', e.target.value)
-                  }
-                />
-              </div>
-              <div className="flex-[2] mr-2">
-                <Input
-                  type="url"
-                  value={link.link}
-                  placeholder="URL (e.g. https://twitter.com/yourusername)"
-                  onChange={(e) =>
-                    handleSocialLinkChange(index, 'link', e.target.value)
-                  }
-                />
-              </div>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => removeSocialLink(index)}
-                className="p-2 text-gray-400 hover:text-red-500"
-                aria-label="Remove social link"
-              >
-                <Trash size={16} />
-              </Button>
-            </div>
-          ))}
-
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={addSocialLink}
-            className="mt-2 text-blue-600 border-blue-300 hover:bg-blue-50"
-          >
-            + Add Social Link
-          </Button>
-        </div>
+        <SocialLinksList
+          socialLinks={socialLinks}
+          handleSocialLinkChange={handleSocialLinkChange}
+          addSocialLink={addSocialLink}
+          removeSocialLink={removeSocialLink}
+        />
       </div>
-
-      {/* Save button removed */}
     </div>
   );
 };
