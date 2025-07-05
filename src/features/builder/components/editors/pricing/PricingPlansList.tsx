@@ -56,7 +56,7 @@ export const PricingPlansList = memo(function PricingPlansList({
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1  gap-4">
         {plans.map((plan, planIndex) => (
           <PricingPlanItem
             key={plan.id}

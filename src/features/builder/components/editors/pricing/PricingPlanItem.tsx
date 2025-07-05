@@ -97,7 +97,7 @@ export const PricingPlanItem = memo(function PricingPlanItem({
           />
         </div>
 
-        <div className="flex space-x-2 mb-3">
+        <div className="grid grid-cols-1 gap-2 mb-3">
           <input
             type="text"
             value={plan.buttonText}
