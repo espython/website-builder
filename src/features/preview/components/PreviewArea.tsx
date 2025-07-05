@@ -388,7 +388,7 @@ const PreviewArea = () => {
             </DndContext>
           ) : (
             <div className="flex items-center justify-center py-24">
-              <div className="text-center p-8 max-w-md">
+              <div className="flex flex-col items-center text-center justify-center p-8 max-w-md">
                 <div className="bg-gray-100 rounded-full p-4 inline-block mb-4">
                   <ArrowDownUp size={24} className="text-gray-500" />
                 </div>
